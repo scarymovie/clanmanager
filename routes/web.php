@@ -24,8 +24,14 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 Route::resource('clan', ClanController::class);
+
 Route::get('clan/{clan}/members', [MemberController::class, 'index'])->name('members');
 Route::get('clan/{clan}/members/create', [MemberController::class, 'create'])->name('members.create');
+Route::post('clan/{clan}/members', [MemberController::class, 'store'])->name('members.store');
+Route::delete('clan/{clan}/member/{member}', [MemberController::class, 'destroy'])->name('members.delete');
+
+Route::get('clan/{clan}/events', [\App\Http\Controllers\EventController::class, 'index'])->name('events');
+//Route::resource('events', \App\Http\Controllers\EventController::class);
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

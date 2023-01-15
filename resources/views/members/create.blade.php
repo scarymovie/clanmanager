@@ -1,12 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-clan-menu></x-clan-menu>
+        <x-clan-menu :clan="$clan"></x-clan-menu>
     </x-slot>
     <div class="bg-white shadow mt-0.5">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                <a href="{{ route('members', request()->clan) }}">Все мемберы</a>
-                <a href="{{ route('members.create', request()->clan) }}">Добавить мембера</a>
+                <a href="{{ route('members', $clan) }}">Все мемберы</a>
+                <a href="{{ route('members.create', $clan) }}">Добавить мембера</a>
             </h2>
         </div>
     </div>
@@ -36,30 +36,30 @@
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="max-w-xl">
                     <section>
-                        <form method="post" action="{{ route('clan.store') }}" class="mt-6 space-y-6">
+                        <form method="post" action="{{ route('members.store', $clan) }}" class="mt-6 space-y-6">
                             @csrf
                             <div>
-                                <label class="block font-medium text-sm text-gray-700" for="name">
+                                <label class="block font-medium text-sm text-gray-700" for="nickname">
                                     Ник
                                 </label>
                                 <input
                                     class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
-                                    id="title" name="title" type="text" required="required"
-                                    autofocus="autofocus" autocomplete="name">
-                                <label class="block font-medium text-sm text-gray-700" for="name">
+                                    id="nickname" name="nickname" type="text" required="required"
+                                    autofocus="autofocus" autocomplete="nickname">
+                                <label class="block font-medium text-sm text-gray-700" for="rank">
                                     Звание
                                 </label>
                                 <input
                                     class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
-                                    id="title" name="title" type="text" required="required"
-                                    autofocus="autofocus" autocomplete="name">
-                                <label class="block font-medium text-sm text-gray-700" for="name">
+                                    id="rank" name="rank" type="text" required="required"
+                                    autofocus="autofocus" autocomplete="rank">
+{{--                                <label class="block font-medium text-sm text-gray-700" for="name">
                                     Примечание
                                 </label>
                                 <input
                                     class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
                                     id="title" name="title" type="text" required="required"
-                                    autofocus="autofocus" autocomplete="name">
+                                    autofocus="autofocus" autocomplete="name">--}}
                             </div>
                             <div class="flex items-center gap-4">
                                 <button type="submit"

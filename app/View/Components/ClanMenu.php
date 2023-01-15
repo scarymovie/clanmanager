@@ -6,14 +6,12 @@ use Illuminate\View\Component;
 
 class ClanMenu extends Component
 {
-    /**
-     * Create a new component instance.
-     *
-     * @return void
-     */
-    public function __construct()
+
+    public $clan;
+
+    public function __construct($clan)
     {
-        //
+        $this->clan = $clan;
     }
 
     /**

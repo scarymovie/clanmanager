@@ -9,32 +9,28 @@ use Illuminate\Http\Request;
 class MemberController extends Controller
 {
 
-    public function index(Request $request)
+    public function index(Clan $clan)
     {
-        $clan = Clan::where('title',$request->clan)->first();
         $members = Member::where('clan_id', $clan->id)->get();
-        return view('members.index', compact('members'));
+        return view('members.index', compact('members', 'clan'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
+    public function create(Clan $clan)
     {
-        return view('members.create');
+        return view('members.create', compact('clan'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
+    public function store(Request $request, Clan $clan)
     {
-        //
+        $validated = $request->all();
+        $member = Member::create([
+            'clan_id' => $clan->id,
+            'user_id' => null,
+            'nickname' => $validated['nickname'],
+            'rank' => $validated['rank']
+            ]);
+
+        return redirect()->back();
     }
 
     public function show(Request $request, member $member)
@@ -71,8 +67,10 @@ class MemberController extends Controller
      * @param  \App\Models\member  $member
      * @return \Illuminate\Http\Response
      */
-    public function destroy(member $member)
+    public function destroy(Request $request)
     {
-        //
+        $member = Member::find($request->member);
+        $member->delete();
+        return redirect()->back();
     }
 }

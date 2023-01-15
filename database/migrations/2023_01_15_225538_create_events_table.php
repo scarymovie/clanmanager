@@ -13,12 +13,13 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('members', function (Blueprint $table) {
+        Schema::create('events', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('clan_id')->constrained('clans')->cascadeOnDelete();
-            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
-            $table->string('nickname')->unique();
-            $table->string('rank');
+            $table->foreignId('clan_id')->nullable()->constrained('clans')->cascadeOnDelete();
+            $table->string('title')->unique();
+            $table->string('Note');
+            $table->string('weekday');
+            $table->string('time');
             $table->timestamps();
         });
     }
@@ -30,6 +31,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('members');
+        Schema::dropIfExists('events');
     }
 };
