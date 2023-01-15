@@ -25,6 +25,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 Route::resource('clan', ClanController::class);
 Route::get('clan/{clan}/members', [MemberController::class, 'index'])->name('members');
+Route::get('clan/{clan}/members/create', [MemberController::class, 'create'])->name('members.create');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -2,15 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Clan;
 use App\Models\member;
 use Illuminate\Http\Request;
 
 class MemberController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        return view('members.index');
+        $clan = Clan::where('title',$request->clan)->first();
+        $members = Member::where('clan_id', $clan->id)->get();
+        return view('members.index', compact('members'));
     }
 
     /**

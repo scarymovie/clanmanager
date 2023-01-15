@@ -5,8 +5,8 @@
     <div class="bg-white shadow mt-0.5">
         <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                <a href="{{ route('members', request()->clan) }}">Добавить мембера</a>
                 <a href="{{ route('members', request()->clan) }}">Все мемберы</a>
+                <a href="{{ route('members.create', request()->clan) }}">Добавить мембера</a>
             </h2>
         </div>
     </div>
