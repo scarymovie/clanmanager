@@ -15,4 +15,18 @@ class Member extends Model
         'nickname',
         'rank'
     ];
+
+    public function clan()
+    {
+        return $this->belongsTo(Clan::class);
+    }
+
+    public static function checkIfMasterNotExist(Clan $clan)
+    {
+        if ($clan->members()->where('rank', 'Мастер')->exists()){
+            throw new \Exception('Мастер уже существует');
+        }
+
+        return true;
+    }
 }

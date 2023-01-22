@@ -49,4 +49,5 @@ class ClanController extends Controller
     {
         //
     }
+
 }

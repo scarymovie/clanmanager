@@ -53,13 +53,14 @@
                                     class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
                                     id="rank" name="rank" type="text" required="required"
                                     autofocus="autofocus" autocomplete="rank">
-{{--                                <label class="block font-medium text-sm text-gray-700" for="name">
-                                    Примечание
+                                <label class="block font-medium text-sm text-gray-700" for="user_name">
+                                    Найти зарегистрированного пользователя
                                 </label>
                                 <input
                                     class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full"
-                                    id="title" name="title" type="text" required="required"
-                                    autofocus="autofocus" autocomplete="name">--}}
+                                    id="user_name" name="user_name" type="text"
+                                    autofocus="autofocus" autocomplete="user_name">
+                                <input type="hidden" id="user_id" name="user_id">
                             </div>
                             <div class="flex items-center gap-4">
                                 <button type="submit"
@@ -73,5 +74,26 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function (){
+
+            $(document).on('click', '#user_name', function () {
+                $('#user_name').autocomplete({
+                    source: function (request, response) {
+                        jQuery.get("/getusers", {
+                            query: request.term
+                        }, function (data) {
+                            response(data);
+                            $('#user_id').val(data[0].id)
+                            $('#user_name').val(data[0].name)
+                        });
+                    },
+                    minLength: 2
+                });
+                $('.ui-helper-hidden-accessible').remove()
+            })
+        })
+    </script>
 
 </x-app-layout>

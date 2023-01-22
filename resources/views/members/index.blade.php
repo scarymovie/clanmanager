@@ -47,6 +47,9 @@
                                     {{ $member->rank }}
                                 </td>
                                 <td>
+                                    @if($member->rank === 'Мастер')
+                                        Изменить
+                                    @else
                                     <form action="{{ route('members.delete', ['member' => $member, 'clan' => $clan]) }}" method="post">
                                         @csrf
                                         @method('DELETE')
@@ -55,6 +58,7 @@
                                             Кикнуть
                                         </button>
                                     </form>
+                                    @endif
                                 </td>
                             </tr>
                         @endforeach

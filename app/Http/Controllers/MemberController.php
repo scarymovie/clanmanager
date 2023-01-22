@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Clan;
 use App\Models\member;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class MemberController extends Controller
 {
@@ -23,9 +24,14 @@ class MemberController extends Controller
     public function store(Request $request, Clan $clan)
     {
         $validated = $request->all();
+
+        if ($validated['rank'] === 'Мастер'){
+            Member::checkIfMasterNotExist($clan);
+        }
+
         $member = Member::create([
             'clan_id' => $clan->id,
-            'user_id' => null,
+            'user_id' => $validated['user_id'] ?? null,
             'nickname' => $validated['nickname'],
             'rank' => $validated['rank']
             ]);
@@ -72,5 +78,23 @@ class MemberController extends Controller
         $member = Member::find($request->member);
         $member->delete();
         return redirect()->back();
+    }
+
+
+    public function createMaster(Request $request, Clan $clan)
+    {
+        $validated = $request->all();
+        $validated['clan_id'] = $clan->id;
+
+        if (Member::checkIfMasterNotExist($clan)){
+            $member = Member::create([
+                'clan_id' => $validated['clan_id'],
+                'user_id' => Auth::id(),
+                'nickname' => $validated['nickname'],
+                'rank' => 'Мастер'
+            ]);
+        }
+
+        return redirect()->route('members', compact('clan'));
     }
 }
