@@ -6,16 +6,53 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
+                <div
+                    class="eventFull hidden float-right min-w-[66%] max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+
+
+                    <button type="button"
+                            class="closeEventMenu float-right bg-white rounded-md p-2 inline-flex items-center justify-center text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
+                        <span class="sr-only">Close menu</span>
+                        <!-- Heroicon name: outline/x -->
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                             stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                    <h5 class="eventFullTitle ml-8 mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center"></h5>
+
+                    <p class="eventFullTime mb-3 font-normal text-gray-700 dark:text-gray-400 text-center">
+                        <br></p>
+
+
+                    <label for="countries_disabled"
+                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Выберите персонажа</label>
+                    <select id="countries_disabled"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected>Choose a country</option>
+                        <option value="US">United States</option>
+                        <option value="CA">Canada</option>
+                        <option value="FR">France</option>
+                        <option value="DE">Germany</option>
+                    </select>
+
+                    <label for="countries_disabled"
+                           class="block mt-2 mb-2 text-sm font-medium text-gray-900 dark:text-white">Выберите пла</label>
+                    <select id="countries_disabled"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+                        <option selected>Choose a country</option>
+                        <option value="US">United States</option>
+                        <option value="CA">Canada</option>
+                        <option value="FR">France</option>
+                        <option value="DE">Germany</option>
+                    </select>
+
+                </div>
                 @foreach($events as $event)
                     @if($event->status === null)
-                        <div data-event="{{ $event->id }}"
-                             class="eventFull hidden float-right min-w-[66%] max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">{{ $event->title }}</h5>
-                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 text-center">{{ $event->weekday }}
-                                <br>{{ $event->time }}</p>
-                        </div>
                         <div
-                            class="mb-4 block max-w-xs p-6 bg-white border border-gray-200 rounded-lg shadow-md
+                            class="mb-4 test block max-w-xs p-6 bg-white border border-gray-200 rounded-lg shadow-md
                                  hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 event">
                             <div style="display: flex;">
                                 <div style="display: inline">
@@ -52,12 +89,6 @@
                         </div>
 
                     @elseif($event->status === 'decline')
-                        <div data-event="{{ $event->id }}"
-                             class="eventFull hidden float-right min-w-[66%] max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">{{ $event->title }}</h5>
-                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 text-center">{{ $event->weekday }}
-                                <br>{{ $event->time }}</p>
-                        </div>
                         <div
                             class="mb-4 block max-w-xs p-6 bg-red-500 border border-gray-200 rounded-lg shadow-md
                                         dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 event">
@@ -90,12 +121,6 @@
                             </div>
                         </div>
                     @elseif($event->status === 'accept')
-                        <div data-event="{{ $event->id }}"
-                             class="eventFull hidden float-right min-w-[66%] max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">{{ $event->title }}</h5>
-                            <p class="mb-3 font-normal text-gray-700 dark:text-gray-400 text-center">{{ $event->weekday }}
-                                <br>{{ $event->time }}</p>
-                        </div>
                         <div
                             class="mb-4 block max-w-xs p-6 bg-green-300 border border-gray-200 rounded-lg shadow-md
                                         hover:bg-green-300 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 event">
@@ -136,10 +161,23 @@
     <script>
         $(document).ready(function () {
             $(document).on('click', '.eventUnique', function () {
-                console.log('asd')
 
                 let event_id = $(this).attr('id')
-                $('.eventFull[data-event='+event_id+']').toggle()
+
+                $.ajax({
+                    method: "get",
+                    url: "{{ route('events.show', ['clan' => $clan]) }}",
+                    data: {event: event_id},
+                    success: function (data) {
+                        console.log(data)
+                        $('.eventFullTitle').text(data.title)
+                        $('.eventFullTime').text(data.weekday + ' ' + data.time)
+                    }
+                })
+                $('.eventFull').show()
+            })
+            $(document).on('click', '.closeEventMenu', function () {
+                $('.eventFull').hide()
             })
         })
     </script>

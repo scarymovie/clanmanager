@@ -55,15 +55,12 @@ class EventController extends Controller
         //
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Event $event)
+    public function show(Request $request)
     {
-        //
+        $validated = $request->all();
+        $event = Event::find($validated['event']);
+//        $user = Auth::user();
+        return response()->json($event);
     }
 
     /**

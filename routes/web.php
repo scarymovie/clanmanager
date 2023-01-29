@@ -35,6 +35,7 @@ Route::post('clan/{clan}/members', [MemberController::class, 'store'])->name('me
 Route::delete('clan/{clan}/member/{member}', [MemberController::class, 'destroy'])->name('members.delete');
 
 Route::get('clan/{clan}/events', [EventController::class, 'index'])->name('events');
+Route::get('/ajax/clan/{clan}/event', [EventController::class, 'show'])->name('events.show');
 Route::get('clan/{clan}/event/{event}', [EventController::class, 'eventStatus'])->name('event.status');
 //Route::resource('events', \App\Http\Controllers\EventController::class);
 
