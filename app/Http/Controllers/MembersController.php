@@ -7,7 +7,7 @@ use App\Models\member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class MemberController extends Controller
+class MembersController extends Controller
 {
 
     public function index(Clan $clan)

@@ -112,6 +112,7 @@ class EventController extends Controller
             ['clan_id' => $validated['clan_id'], 'event_id' => $validated['event_id'], 'member_id' => $validated['member_id']],
             ['status' => $validated['status']]
         );
+
 //dd($eventMember);
         return redirect()->back();
     }

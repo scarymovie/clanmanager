@@ -6,13 +6,13 @@ use App\Models\Clan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ClanController extends Controller
+class ClansController extends Controller
 {
 
     public function index()
     {
         $clans = Clan::where('user_id', Auth::id())->get();
-        return view('clan.index', compact('clans'));
+        return view('clans.index', compact('clans'));
     }
 
     public function create()
@@ -32,7 +32,7 @@ class ClanController extends Controller
 
     public function show(Clan $clan)
     {
-        return view('clan.show', compact('clan'));
+        return view('clans.show', compact('clan'));
     }
 
     public function edit(Clan $clan)
