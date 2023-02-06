@@ -7,10 +7,11 @@
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
                 <div class="relative overflow-x-auto">
-                    @if (!empty($success))
-                        <h1>{{ $success }}</h1>
+                    @if(session()->has('message'))
+                        <div class="alert alert-success">
+                            {{ session()->get('message') }}
+                        </div>
                     @endif
-
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <ul>
@@ -20,8 +21,10 @@
                             </ul>
                         </div>
                     @endif
-                    <form action="{{ route('clan.characters.store', $clan) }}" method="post">
+
+                    <form action="{{ route('clan.characters.store', ['clan' => $clan]) }}" method="post">
                         @csrf
+                        <input type="hidden" value="{{ $member->id }}" name="member_id">
                         <div class="grid gap-6 mb-6 md:grid-cols-2">
 
                             <div>

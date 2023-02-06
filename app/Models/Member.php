@@ -21,6 +21,11 @@ class Member extends Model
         return $this->belongsTo(Clan::class);
     }
 
+    public function characters()
+    {
+        return $this->hasMany(Character::class);
+    }
+
     public static function checkIfMasterNotExist(Clan $clan)
     {
         if ($clan->members()->where('rank', 'Мастер')->exists()){

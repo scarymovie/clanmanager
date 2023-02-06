@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\CharacterStoreRequest;
-use App\Http\Requests\ChatacterStoreRequest;
 use App\Models\Character;
 use App\Models\CharactersType;
 use App\Models\Clan;
+use App\Models\Member;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,8 +16,13 @@ class CharactersController extends Controller
 
     public function index(Clan $clan)
     {
+        $member = Member::where('clan_id', $clan->id)
+            ->where('user_id', Auth::id())
+            ->first();
 
-        return view('characters.index', compact('clan'));
+        $characters = Character::where('member_id', $member->id)->orderBy('status')->with('type')->get();
+
+        return view('characters.index', compact('clan', 'characters'));
     }
 
     /**
@@ -27,7 +33,8 @@ class CharactersController extends Controller
     public function create(Clan $clan)
     {
         $characters_type = CharactersType::all();
-        return view('characters.create', compact('clan', 'characters_type'));
+        $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
+        return view('characters.create', compact('clan', 'characters_type', 'member'));
     }
 
     /**
@@ -36,7 +43,7 @@ class CharactersController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(CharacterStoreRequest $characterStoreRequest)
+    public function store(CharacterStoreRequest $characterStoreRequest, Clan $clan)
     {
         try {
             $validated = $characterStoreRequest->validated();
@@ -46,13 +53,13 @@ class CharactersController extends Controller
                 'character_type_id' => $validated['character_type'],
                 'link' => $validated['link'],
                 'note' => $validated['note'] ?? '',
-                'user_id' => Auth::id()
+                'member_id' => $validated['member_id'],
             ]);
         } catch (\Exception $exception){
             return redirect()->back()->withErrors($exception->getMessage());
         }
 
-        return redirect()->back()->with(['success' => 'Успешно']);
+        return redirect()->back()->with('message', 'Успешно');
     }
 
     /**
@@ -84,19 +91,14 @@ class CharactersController extends Controller
      * @param  \App\Models\Character  $character
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Character $character)
+    public function update(Request $request, $character)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Character  $character
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Character $character)
+    public function destroyAll(Clan $clan, Character $character)
     {
-        //
+        $character->delete();
+        return redirect()->back()->with('message', 'Успешно');
     }
 }

@@ -39,6 +39,7 @@ Route::get('clan/{clan}/events', [EventController::class, 'index'])->name('event
 Route::get('/ajax/clan/{clan}/event', [EventController::class, 'show'])->name('events.show');
 Route::get('clan/{clan}/event/{event}', [EventController::class, 'eventStatus'])->name('event.status');
 
+Route::delete('/clan/{clan}/characters/{character}/destroy', [CharactersController::class, 'destroyAll'])->name('test.asd');
 Route::resource('clan.characters', CharactersController::class);
 //Route::resource('events', \App\Http\Controllers\EventController::class);
 

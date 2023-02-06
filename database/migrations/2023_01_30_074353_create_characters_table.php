@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('characters', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('member_id')->constrained('members')->cascadeOnDelete();
             $table->string('nickname');
             $table->enum('status', ['main', 'twin']);
             $table->foreignId('character_type_id')->constrained('characters_types')->cascadeOnDelete();

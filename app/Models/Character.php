@@ -15,6 +15,11 @@ class Character extends Model
         'character_type_id',
         'link',
         'note',
-        'user_id'
+        'member_id'
     ];
+
+    public function type()
+    {
+        return $this->belongsTo(CharactersType::class, 'character_type_id');
+    }
 }
