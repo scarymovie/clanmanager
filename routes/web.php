@@ -23,28 +23,24 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-Route::resource('clan', ClansController::class);
+Route::middleware(['auth', 'clan'])->group(function (){
+    Route::get('clan/{clan}/members', [MembersController::class, 'index'])->name('members');
+    Route::get('clan/{clan}/members/create', [MembersController::class, 'create'])->name('members.create');
+    Route::post('clan/{clan}/members', [MembersController::class, 'store'])->name('members.store');
+    Route::delete('clan/{clan}/member/{member}', [MembersController::class, 'destroy'])->name('members.delete');
+    Route::get('clan/{clan}/events', [EventController::class, 'index'])->name('events');
+    Route::get('/ajax/clan/{clan}/event', [EventController::class, 'show'])->name('events.show');
+    Route::get('clan/{clan}/event/{event}', [EventController::class, 'eventStatus'])->name('event.status');
+    Route::delete('/clan/{clan}/characters/{character}/destroy', [CharactersController::class, 'destroyAll'])->name('character.delete');
+    Route::resource('clan.characters', CharactersController::class);
+});
 
-Route::post('clan/{clan}/master', [MembersController::class, 'createMaster'])->name('master.create');
+Route::middleware(['auth'])->group(function (){
+    Route::resource('clan', ClansController::class);
+    Route::post('clan/{clan}/master', [MembersController::class, 'createMaster'])->name('master.create');
+    Route::get('getusers', [AjaxController::class, 'index'])->name('getusers');
+});
 
-Route::get('clan/{clan}/members', [MembersController::class, 'index'])->name('members');
-Route::get('clan/{clan}/members/create', [MembersController::class, 'create'])->name('members.create');
-Route::post('clan/{clan}/members', [MembersController::class, 'store'])->name('members.store');
-Route::delete('clan/{clan}/member/{member}', [MembersController::class, 'destroy'])->name('members.delete');
-
-Route::get('clan/{clan}/events', [EventController::class, 'index'])->name('events');
-Route::get('/ajax/clan/{clan}/event', [EventController::class, 'show'])->name('events.show');
-Route::get('clan/{clan}/event/{event}', [EventController::class, 'eventStatus'])->name('event.status');
-
-Route::delete('/clan/{clan}/characters/{character}/destroy', [CharactersController::class, 'destroyAll'])->name('test.asd');
-Route::resource('clan.characters', CharactersController::class);
-//Route::resource('events', \App\Http\Controllers\EventController::class);
-
-
-Route::get('getusers', [AjaxController::class, 'index'])->name('getusers');
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfilesController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfilesController::class, 'update'])->name('profile.update');

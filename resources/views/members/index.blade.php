@@ -50,7 +50,7 @@
                                     @if($member->rank === 'Мастер')
                                         Изменить
                                     @else
-                                    <form action="{{ route('members.delete', ['member' => $member, 'clan' => $clan]) }}" method="post">
+                                    <form action="{{ route('members.delete', [$clan, $member]) }}" method="post">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"

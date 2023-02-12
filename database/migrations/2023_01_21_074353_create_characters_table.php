@@ -20,7 +20,6 @@ return new class extends Migration
             $table->enum('status', ['main', 'twin']);
             $table->foreignId('character_type_id')->constrained('characters_types')->cascadeOnDelete();
             $table->string('link');
-            $table->string('note');
             $table->timestamps();
         });
     }

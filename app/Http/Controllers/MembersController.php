@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class MembersController extends Controller
 {
-
     public function index(Clan $clan)
     {
         $members = Member::where('clan_id', $clan->id)->get();
@@ -67,15 +66,8 @@ class MembersController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\member  $member
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Request $request)
+    public function destroy(Clan $clan, Member $member)
     {
-        $member = Member::find($request->member);
         $member->delete();
         return redirect()->back();
     }

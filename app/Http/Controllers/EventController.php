@@ -11,15 +11,12 @@ use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index(Clan $clan)
     {
-        $events = Event::all();
-        $member = Member::where('user_id', Auth::id())->first();
+        $events = Event::with('status')->get();
+        $member = Member::where('user_id', Auth::id())->with('characters', 'characters.type')->first();
+
         foreach ($events as $event){
             $eventMemberStatus = EventMemberStatus::query()
                 ->where('event_id', $event->id)
@@ -29,27 +26,16 @@ class EventController extends Controller
 
             $event['status'] = $eventMemberStatus['status'] ?? null;
         }
+        $character = $member->characters->where('status', 'main')->first();
 
-
-        return view('events.index', compact('events', 'clan'));
+        return view('events.index', compact(['events', 'clan', 'character']));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
         //
@@ -63,35 +49,16 @@ class EventController extends Controller
         return response()->json($event);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
-     */
     public function edit(Event $event)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, Event $event)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(Event $event)
     {
         //
@@ -105,15 +72,16 @@ class EventController extends Controller
         $validated['clan_id'] = $clan->id;
         $validated['status'] = $request->status;
 
-        $member = Member::where('clan_id', $validated['clan_id'])->where('user_id', Auth::id())->first();
+        $member = Member::where('clan_id', $validated['clan_id'])->where('user_id', Auth::id())->with('characters')->first();
+        $validated['character_id'] = $member->characters->where('status', 'main')->first()->id;
         $validated['member_id'] = $member->id;
 
         $eventMember = EventMemberStatus::updateOrCreate(
-            ['clan_id' => $validated['clan_id'], 'event_id' => $validated['event_id'], 'member_id' => $validated['member_id']],
+            ['clan_id' => $validated['clan_id'], 'event_id' => $validated['event_id'],
+                'member_id' => $validated['member_id'], 'character_id' => $validated['character_id']],
             ['status' => $validated['status']]
         );
 
-//dd($eventMember);
         return redirect()->back();
     }
 }

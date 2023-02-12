@@ -6,7 +6,15 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                <div
+                @if(!$character)
+                    <h1>
+                        <b>Вам требуется создать персонажа для просмотра ивентов</b>
+                        <br>
+                        Создать персонажа можно
+                        <a href="{{ route('clan.characters.create', $clan) }}">здесь</a>
+                    </h1>
+                @else
+                <div style="position: sticky; top: 2%;"
                     class="eventFull hidden float-right min-w-[66%] max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 
 
@@ -25,29 +33,11 @@
                     <p class="eventFullTime mb-3 font-normal text-gray-700 dark:text-gray-400 text-center">
                         <br></p>
 
-
                     <label for="countries_disabled"
-                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Выберите персонажа</label>
-                    <select id="countries_disabled"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option selected>Choose a country</option>
-                        <option value="US">United States</option>
-                        <option value="CA">Canada</option>
-                        <option value="FR">France</option>
-                        <option value="DE">Germany</option>
-                    </select>
-
-                    <label for="countries_disabled"
-                           class="block mt-2 mb-2 text-sm font-medium text-gray-900 dark:text-white">Выберите пла</label>
-                    <select id="countries_disabled"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                        <option selected>Choose a country</option>
-                        <option value="US">United States</option>
-                        <option value="CA">Canada</option>
-                        <option value="FR">France</option>
-                        <option value="DE">Germany</option>
-                    </select>
-
+                           class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ваш персонаж по умолчанию(основа)</label>
+                    <input disabled id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500
+                    block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ $character->nickname }} {{ $character->type->title }}">
+                    <h6>Изменить можно <a href="{{ route('clan.characters.create', $clan) }}">здесь</a></h6>
                 </div>
                 @foreach($events as $event)
                     @if($event->status === null)
@@ -58,7 +48,7 @@
                                 <div style="display: inline">
                                     <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $event->title }}</h5>
                                     <p class="font-normal text-gray-700 dark:text-gray-400">{{ $event->weekday }}
-                                        <br> {{ $event->time }}</p>
+                                        <br>{{ $event->time }}</p>
                                 </div>
                                 <div style="display: inline; margin-left: auto">
                                     <button type="button" id="{{ $event->id }}"
@@ -153,6 +143,7 @@
                         </div>
                     @endif
                 @endforeach
+                @endif
             </div>
         </div>
     </div>

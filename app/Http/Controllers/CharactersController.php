@@ -8,6 +8,7 @@ use App\Models\CharactersType;
 use App\Models\Clan;
 use App\Models\Member;
 use App\Models\User;
+use App\Service\CharacterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,11 +26,6 @@ class CharactersController extends Controller
         return view('characters.index', compact('clan', 'characters'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(Clan $clan)
     {
         $characters_type = CharactersType::all();
@@ -37,23 +33,19 @@ class CharactersController extends Controller
         return view('characters.create', compact('clan', 'characters_type', 'member'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(CharacterStoreRequest $characterStoreRequest, Clan $clan)
+    public function store(CharacterStoreRequest $characterStoreRequest, Clan $clan, CharacterService $characterService)
     {
         try {
             $validated = $characterStoreRequest->validated();
+            $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
+            $characterService->checkIfMainExists($validated['status'], $member);
+
             $character = Character::create([
                 'nickname' => $validated['nickname'],
                 'status' => $validated['status'],
                 'character_type_id' => $validated['character_type'],
-                'link' => $validated['link'],
-                'note' => $validated['note'] ?? '',
-                'member_id' => $validated['member_id'],
+                'link' => $validated['link'] ?: '',
+                'member_id' => $member->id,
             ]);
         } catch (\Exception $exception){
             return redirect()->back()->withErrors($exception->getMessage());
@@ -62,38 +54,34 @@ class CharactersController extends Controller
         return redirect()->back()->with('message', 'Успешно');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Character  $character
-     * @return \Illuminate\Http\Response
-     */
     public function show(Character $character)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Character  $character
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Character $character)
+    public function edit(Clan $clan, Character $character)
     {
-        //
+        $characters_type = CharactersType::all();
+        return view('characters.edit', compact(['character', 'clan', 'characters_type']));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Character  $character
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $character)
+    public function update(CharacterStoreRequest $characterStoreRequest, Clan $clan, Character $character, CharacterService $characterService)
     {
-        //
+        try {
+            $validated = $characterStoreRequest->validated();
+            $characterService->checkIfMainExists($validated['status'],$validated['member_id']);
+            $character->updateOrFail([
+                'nickname' => $validated['nickname'],
+                'status' => $validated['status'],
+                'character_type_id' => $validated['character_type'],
+                'link' => $validated['link'] ?: '',
+                'member_id' => $validated['member_id'],
+            ]);
+        } catch (\Throwable $exception){
+            return redirect()->back()->withErrors($exception->getMessage());
+        }
+
+        return redirect()->back()->with('message', 'Успешно');
     }
 
     public function destroyAll(Clan $clan, Character $character)

@@ -8,16 +8,20 @@ use Illuminate\Support\Facades\Auth;
 
 class ClansController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('clan', ['except' => ['index', 'create', 'store']]);
+    }
 
     public function index()
     {
-        $clans = Clan::where('user_id', Auth::id())->get();
+        $clans = Clan::all();
         return view('clans.index', compact('clans'));
     }
 
     public function create()
     {
-        //
+        return view('clans.create');
     }
 
     public function store(Request $request)
@@ -27,7 +31,7 @@ class ClansController extends Controller
             'user_id' => Auth::id(),
             'title' => $title
         ]);
-        return redirect()->back();
+        return redirect()->route('clan.show', compact('clan'));
     }
 
     public function show(Clan $clan)

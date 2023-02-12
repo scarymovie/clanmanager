@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('event_id')->constrained('events')->cascadeOnDelete();
             $table->foreignId('member_id')->constrained('members')->cascadeOnDelete();
             $table->foreignId('clan_id')->constrained('clans')->cascadeOnDelete();
+            $table->foreignId('character_id')->constrained('characters')->cascadeOnDelete();
             $table->string('status');
             $table->timestamps();
         });

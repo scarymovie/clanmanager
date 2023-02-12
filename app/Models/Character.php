@@ -22,4 +22,9 @@ class Character extends Model
     {
         return $this->belongsTo(CharactersType::class, 'character_type_id');
     }
+
+    public function member()
+    {
+        return $this->belongsTo(Member::class);
+    }
 }
