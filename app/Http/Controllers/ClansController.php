@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Clan;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ClansController extends Controller
 {
@@ -29,7 +30,8 @@ class ClansController extends Controller
         $title = $request->title;
         $clan = Clan::create([
             'user_id' => Auth::id(),
-            'title' => $title
+            'title' => $title,
+            'invite_link' => Str::random(32)
         ]);
         return redirect()->route('clan.show', compact('clan'));
     }
@@ -52,6 +54,13 @@ class ClansController extends Controller
     public function destroy(Clan $clan)
     {
         //
+    }
+
+    public function setNewInviteLink(Clan $clan)
+    {
+        $newLink = Str::random(32);
+        $clan->update(['invite_link' => $newLink]);
+        return redirect()->back();
     }
 
 }

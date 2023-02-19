@@ -36,9 +36,11 @@ Route::middleware(['auth', 'clan'])->group(function (){
 });
 
 Route::middleware(['auth'])->group(function (){
+    Route::get('clan/{clan}/{token}', [MembersController::class, 'getInvitedUserData'])->name('invited_user');
     Route::resource('clan', ClansController::class);
     Route::post('clan/{clan}/master', [MembersController::class, 'createMaster'])->name('master.create');
     Route::get('getusers', [AjaxController::class, 'index'])->name('getusers');
+    Route::get('clan/{clan}/link/refresh', [ClansController::class, 'setNewInviteLink'])->name('refresh_invite_link');
 });
 
 Route::middleware('auth')->group(function () {

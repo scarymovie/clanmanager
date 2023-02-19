@@ -89,4 +89,9 @@ class MembersController extends Controller
 
         return redirect()->route('members', compact('clan'));
     }
+
+    public function getInvitedUserData(Clan $clan, $token)
+    {
+        dd($token);
+    }
 }

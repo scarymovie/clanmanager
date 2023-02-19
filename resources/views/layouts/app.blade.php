@@ -23,7 +23,8 @@
             crossorigin="anonymous"
             referrerpolicy="no-referrer"
         ></script>
-{{--        <script src="../path/to/flowbite/dist/flowbite.min.js"></script>--}}
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.8/clipboard.min.js"></script>
 
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>

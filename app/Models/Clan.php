@@ -11,7 +11,8 @@ class Clan extends Model
 
     protected $fillable = [
         'user_id',
-        'title'
+        'title',
+        'invite_link'
     ];
 
     public function getRouteKeyName()
