@@ -14,7 +14,9 @@ class EventMemberStatus extends Model
         'clan_id',
         'member_id',
         'status',
-        'character_id'
+        'character_id',
+        'event_date',
+        'party_leader_id',
     ];
 
     public function events()

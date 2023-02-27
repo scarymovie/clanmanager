@@ -20,6 +20,10 @@ return new class extends Migration
             $table->foreignId('clan_id')->constrained('clans')->cascadeOnDelete();
             $table->foreignId('character_id')->constrained('characters')->cascadeOnDelete();
             $table->string('status');
+            $table->date('event_date')->nullable();
+            $table->string('party_leader_id')->nullable();
+            $table->string('image')->nullable();
+            $table->string('note')->nullable();
             $table->timestamps();
         });
     }

@@ -24,15 +24,11 @@ class MembersController extends Controller
     {
         $validated = $request->all();
 
-        if ($validated['rank'] === 'Мастер'){
-            Member::checkIfMasterNotExist($clan);
-        }
-
         $member = Member::create([
             'clan_id' => $clan->id,
-            'user_id' => $validated['user_id'] ?? null,
+            'user_id' => Auth::id(),
             'nickname' => $validated['nickname'],
-            'rank' => $validated['rank']
+            'rank' => 'Мембер'
             ]);
 
         return redirect()->back();
@@ -43,24 +39,11 @@ class MembersController extends Controller
         $members = Member::where();
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\member  $member
-     * @return \Illuminate\Http\Response
-     */
     public function edit(member $member)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\member  $member
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, member $member)
     {
         //
@@ -71,7 +54,6 @@ class MembersController extends Controller
         $member->delete();
         return redirect()->back();
     }
-
 
     public function createMaster(Request $request, Clan $clan)
     {
@@ -90,8 +72,10 @@ class MembersController extends Controller
         return redirect()->route('members', compact('clan'));
     }
 
-    public function getInvitedUserData(Clan $clan, $token)
+    public function getInvitedUserData($token)
     {
-        dd($token);
+        $clan = Clan::where('invite_link', $token)->firstOrFail();
+
+        return view('members.invited', compact('clan'));
     }
 }

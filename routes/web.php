@@ -26,20 +26,21 @@ Route::get('/', function () {
 Route::middleware(['auth', 'clan'])->group(function (){
     Route::get('clan/{clan}/members', [MembersController::class, 'index'])->name('members');
     Route::get('clan/{clan}/members/create', [MembersController::class, 'create'])->name('members.create');
-    Route::post('clan/{clan}/members', [MembersController::class, 'store'])->name('members.store');
     Route::delete('clan/{clan}/member/{member}', [MembersController::class, 'destroy'])->name('members.delete');
     Route::get('clan/{clan}/events', [EventController::class, 'index'])->name('events');
-    Route::get('/ajax/clan/{clan}/event', [EventController::class, 'show'])->name('events.show');
+    Route::get('/clan/{clan}/event/{event}/show', [EventController::class, 'show'])->name('event.show');
+    Route::get('/clan/{clan}/event/{event}/test', [EventController::class, 'test'])->name('event.test');
+    Route::get('/ajax/clan/{clan}/event_details', [EventController::class, 'showDetails'])->name('events.show_details');
     Route::get('clan/{clan}/event/{event}', [EventController::class, 'eventStatus'])->name('event.status');
     Route::delete('/clan/{clan}/characters/{character}/destroy', [CharactersController::class, 'destroyAll'])->name('character.delete');
     Route::resource('clan.characters', CharactersController::class);
 });
 
 Route::middleware(['auth'])->group(function (){
-    Route::get('clan/{clan}/{token}', [MembersController::class, 'getInvitedUserData'])->name('invited_user');
+    Route::post('clan/{clan}/members', [MembersController::class, 'store'])->name('members.store');
+    Route::get('invited/{token}', [MembersController::class, 'getInvitedUserData'])->name('invited_user');
     Route::resource('clan', ClansController::class);
     Route::post('clan/{clan}/master', [MembersController::class, 'createMaster'])->name('master.create');
-    Route::get('getusers', [AjaxController::class, 'index'])->name('getusers');
     Route::get('clan/{clan}/link/refresh', [ClansController::class, 'setNewInviteLink'])->name('refresh_invite_link');
 });
 
