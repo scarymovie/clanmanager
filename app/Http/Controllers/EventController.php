@@ -34,6 +34,7 @@ class EventController extends Controller
             $dayName = Carbon::parse($event->start_date)->locale('ru_RU')->dayName;
             $event['week_day_name'] = mb_convert_case($dayName, MB_CASE_TITLE, "UTF-8");
             $event['week_day'] = Carbon::parse($event->start_date)->isoWeekday();
+            $event['time'] = $event->weekday->time;
         }
         $events = collect($events)->sortBy('week_day');
         $character = $member->characters->where('status', 'main')->first();
