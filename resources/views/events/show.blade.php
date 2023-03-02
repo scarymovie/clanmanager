@@ -13,6 +13,7 @@
                     <br>{{ $event->weekday->time }}</p>
 
                 <form action="{{ route('event.test', [$clan, $event]) }}">
+                    <input type="hidden" value="{{ $difference }}" name="difference">
                     <div>
                         <label for="types" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Персонаж</label>
                         <select id="types" name="character_id"

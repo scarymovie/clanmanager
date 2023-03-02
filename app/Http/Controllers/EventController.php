@@ -13,13 +13,20 @@ use Illuminate\Support\Facades\Auth;
 class EventController extends Controller
 {
 
-    public function index(Clan $clan, $week = null)
+    public function index(Request $request, Clan $clan)
     {
-        $week = '03.01.2024';
-//        $weekday = Carbon::parse($week)->weekday();
-        $weekday = Carbon::parse()->weekday();
+
+        $week = $request->week;
+
+        if ($week != null){
+            $weekday = Carbon::parse($week)->isoWeekday();
+            $diffWeeks = Carbon::now()->diffInWeeks($week, false);
+        } else {
+            $weekday = Carbon::parse()->isoWeekday();
+            $diffWeeks = Carbon::now()->diffInWeeks($week, false);
+        }
+
         $events = Event::with('status', 'weekday')->get();
-//dd($events);
         $member = Member::where('user_id', Auth::id())->with('characters', 'characters.type')->first();
 
         foreach ($events as $event){
@@ -38,8 +45,7 @@ class EventController extends Controller
         }
         $events = collect($events)->sortBy('week_day');
         $character = $member->characters->where('status', 'main')->first();
-
-        return view('events.index', compact(['events', 'clan', 'character', 'weekday']));
+        return view('events.index', compact(['events', 'clan', 'character', 'weekday', 'diffWeeks']));
     }
 
     public function create()
@@ -52,13 +58,14 @@ class EventController extends Controller
         //
     }
 
-    public function show(Clan $clan, Event $event)
+    public function show(Request $request, Clan $clan, Event $event)
     {
+        $difference = $request->difference;
         $dayName = Carbon::parse($event->start_date)->locale('ru_RU')->dayName;
         $event['week_day'] = mb_convert_case($dayName, MB_CASE_TITLE, "UTF-8");
         $member = Member::where('user_id', Auth::id())->with('characters', 'characters.type')->first();
         $characters = $member->characters;
-        return view('events.show', compact(['event', 'clan', 'characters']));
+        return view('events.show', compact(['event', 'clan', 'characters', 'difference']));
     }
 
     public function showDetails(Request $request, Clan $clan)
@@ -106,14 +113,21 @@ class EventController extends Controller
 
     public function test(Request $request, Clan $clan, Event $event)
     {
-        $event_day = $event->start_date;
-        $currentEvent = Carbon::now()->diffInWeeks($event_day);
-        $event_date = Carbon::parse($event_day)->addWeek(3);
+        $difference = $request->difference;
+        $event_day = Carbon::parse($event->start_date); // 30.01
+
+        // ниже надо вставить переменную
+        $currentEvent = Carbon::parse()->diffInWeeks($event_day); // 4
+        $event_date = Carbon::parse($event_day)->addWeek($currentEvent); // 27.02
+        if ($difference){
+            $event_date = $event_date->addWeek($difference);
+        }
+
 
         $validated['event_id'] = $event->id;
 
         $validated['clan_id'] = $clan->id;
-        $validated['status'] = 'cool';
+        $validated['status'] = 'accept';
 
         $member = Member::where('clan_id', $validated['clan_id'])->where('user_id', Auth::id())->with('characters')->first();
         $validated['character_id'] = $member->characters->where('status', 'main')->first()->id;
