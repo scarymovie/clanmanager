@@ -12,7 +12,7 @@
                 <p class="eventFullTime mb-3 font-normal text-gray-700 dark:text-gray-400 text-center">{{ $event->week_day }}
                     <br>{{ $event->weekday->time }}</p>
 
-                <form action="{{ route('event.test', [$clan, $event]) }}">
+                <form action="{{ route('event.status', [$clan, $event]) }}">
                     <input type="hidden" value="{{ $difference }}" name="difference">
                     <div>
                         <label for="types" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Персонаж</label>

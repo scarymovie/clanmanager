@@ -11,7 +11,7 @@
         @endif>Ивенты</a>
     <a href="{{ route('clan.characters.index', $clan) }}">Мои персонажи</a>
     <a href="">Управление</a>
-    <a href="">Активность</a>
+    <a href="{{ route('clan.activity.index', $clan) }}">Активность</a>
     <a href="">Отписи</a>
     <a href="">Офицерка</a>
 </h2>

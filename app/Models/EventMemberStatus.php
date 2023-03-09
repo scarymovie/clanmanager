@@ -17,10 +17,16 @@ class EventMemberStatus extends Model
         'character_id',
         'event_date',
         'party_leader_id',
+        'note'
     ];
 
     public function events()
     {
         return $this->belongsToMany(Event::class);
+    }
+
+    public function character()
+    {
+        return $this->belongsTo(Character::class);
     }
 }

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AcitivityController;
 use App\Http\Controllers\CharactersController;
 use App\Http\Controllers\ClansController;
 use App\Http\Controllers\EventController;
@@ -29,11 +30,11 @@ Route::middleware(['auth', 'clan'])->group(function (){
     Route::delete('clan/{clan}/member/{member}', [MembersController::class, 'destroy'])->name('members.delete');
     Route::get('clan/{clan}/events', [EventController::class, 'index'])->name('events');
     Route::get('/clan/{clan}/event/{event}/show', [EventController::class, 'show'])->name('event.show');
-    Route::get('/clan/{clan}/event/{event}/test', [EventController::class, 'test'])->name('event.test');
     Route::get('/ajax/clan/{clan}/event_details', [EventController::class, 'showDetails'])->name('events.show_details');
     Route::get('clan/{clan}/event/{event}', [EventController::class, 'eventStatus'])->name('event.status');
     Route::delete('/clan/{clan}/characters/{character}/destroy', [CharactersController::class, 'destroyAll'])->name('character.delete');
     Route::resource('clan.characters', CharactersController::class);
+    Route::resource('clan.activity', AcitivityController::class);
 });
 
 Route::middleware(['auth'])->group(function (){
