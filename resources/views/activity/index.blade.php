@@ -15,9 +15,6 @@
                                     Ник
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Чар
-                                </th>
-                                <th scope="col" class="px-6 py-3">
                                     Явка
                                 </th>
                                 <th scope="col" class="px-6 py-3">
@@ -37,15 +34,12 @@
                             <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                 @foreach($members as $member)
                                     <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        <strong>{{ $member->nickname }}</strong>
-                                    </th>
-                                    <td class="px-6 py-4">
                                         @foreach($member->characters as $character)
                                             @if($character->status === 'main')
                                                 <strong>{{ $character->nickname }}<br></strong>
                                             @endif
                                         @endforeach
-                                    </td>
+                                    </th>
                                     <td class="px-6 py-4">
                                         {{ $activity_percent }}%
                                     </td>

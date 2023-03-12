@@ -14,6 +14,17 @@
                         <a href="{{ route('clan.characters.create', $clan) }}">здесь</a>
                     </h1>
                 @else
+                    <div class="inline-flex rounded-md shadow-sm" role="group">
+                        <a href="{{ route('events', $clan) }}" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                            Ивенты
+                        </a>
+                        <a href="{{ route('events.create', $clan) }}" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                            Создать
+                        </a>
+                        <a type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
+                            Редактировать
+                        </a>
+                    </div>
                     <div style="position: sticky; top: 2%;"
                          class="eventFull hidden float-right min-w-[66%] max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 
@@ -63,7 +74,7 @@
                                     <div style="display: inline">
                                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $event->title }}</h5>
                                         <p class="font-normal text-gray-700 dark:text-gray-400">{{ $event->week_day_name }}
-                                            <br>{{ $event->weekday->time }}</p>
+                                            <br>{{ date('H:i', strtotime($event->start_date)) }}</p>
                                     </div>
                                     <div style="display: inline; margin-left: auto">
                                         <button type="button" id="{{ $event->id }}"
@@ -96,7 +107,7 @@
                                     <div style="display: inline">
                                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $event->title }}</h5>
                                         <p class="font-normal text-gray-700 dark:text-gray-400">{{ $event->week_day_name }}
-                                            <br>{{ $event->weekday->time }}</p>
+                                            <br>{{  date('H:i', strtotime($event->start_date)) }}</p>
                                     </div>
                                     <div style="display: inline; margin-left: auto">
                                         <button type="button" id="{{ $event->id }}"
@@ -121,7 +132,7 @@
                                     </div>
                                 @endif
                             </div>
-                        @elseif($event['week_day'] = $weekday && \Carbon\Carbon::parse($event->weekday->time)->format('H:i') < now())
+                        @elseif($event['week_day'] = $weekday && \Carbon\Carbon::parse( date('H:i', strtotime($event->start_date)))->format('H:i') < now())
                             <div
                                 class="mb-4 test block max-w-xs p-6 bg-white border border-gray-200 rounded-lg shadow-md
                                  hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 event">
@@ -129,7 +140,7 @@
                                     <div style="display: inline">
                                         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $event->title }}</h5>
                                         <p class="font-normal text-gray-700 dark:text-gray-400">{{ $event->week_day_name }}
-                                            <br>{{ $event->weekday->time }}</p>
+                                            <br>{{  date('H:i', strtotime($event->start_date)) }}</p>
                                     </div>
                                     <div style="display: inline; margin-left: auto">
                                         <button type="button" id="{{ $event->id }}"
@@ -161,7 +172,7 @@
                                         <div style="display: inline">
                                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $event->title }}</h5>
                                             <p class="font-normal text-gray-700 dark:text-gray-400">{{ $event->week_day_name }}
-                                                <br>{{ $event->weekday->time }}</p>
+                                                <br>{{  date('H:i', strtotime($event->start_date)) }}</p>
                                         </div>
                                         <div style="display: inline; margin-left: auto">
                                             <button type="button" id="{{ $event->id }}"
@@ -198,7 +209,7 @@
                                         <div style="display: inline">
                                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $event->title }}</h5>
                                             <p class="font-normal text-gray-700 dark:text-gray-400">{{ $event->week_day_name }}
-                                                <br> {{ $event->weekday->time }}</p>
+                                                <br> {{  date('H:i', strtotime($event->start_date)) }}</p>
                                         </div>
                                         <div style="display: inline; margin-left: auto">
                                             <button type="button" id="{{ $event->id }}"
@@ -230,7 +241,7 @@
                                         <div style="display: inline">
                                             <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $event->title }}</h5>
                                             <p class="font-normal text-gray-700 dark:text-gray-400">{{ $event->week_day_name }}
-                                                <br> {{ $event->weekday->time }}</p>
+                                                <br> {{  date('H:i', strtotime($event->start_date)) }}</p>
                                         </div>
                                         <div style="display: inline; margin-left: auto">
                                             <button type="button" id="{{ $event->id }}"

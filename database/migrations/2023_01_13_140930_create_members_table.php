@@ -17,7 +17,6 @@ return new class extends Migration
             $table->id();
             $table->foreignId('clan_id')->constrained('clans')->cascadeOnDelete();
             $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
-            $table->string('nickname')->unique();
             $table->string('rank');
             $table->timestamps();
         });

@@ -33,20 +33,14 @@ class CharactersController extends Controller
         return view('characters.create', compact('clan', 'characters_type', 'member'));
     }
 
-    public function store(CharacterStoreRequest $characterStoreRequest, Clan $clan, CharacterService $characterService)
+    public function store(CharacterStoreRequest $characterStoreRequest, Clan $clan, Member $member, CharacterService $characterService)
     {
         try {
             $validated = $characterStoreRequest->validated();
             $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
             $characterService->checkIfMainExists($validated['status'], $member);
 
-            $character = Character::create([
-                'nickname' => $validated['nickname'],
-                'status' => $validated['status'],
-                'character_type_id' => $validated['character_type'],
-                'link' => $validated['link'] ?: '',
-                'member_id' => $member->id,
-            ]);
+            $character = $characterService->createCharacter($validated, $member);
         } catch (\Exception $exception){
             return redirect()->back()->withErrors($exception->getMessage());
         }

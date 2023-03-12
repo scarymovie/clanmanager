@@ -12,6 +12,7 @@ class ClansController extends Controller
     public function __construct()
     {
         $this->middleware('clan', ['except' => ['index', 'create', 'store']]);
+        $this->middleware('master', ['only' => ['show']]);
     }
 
     public function index()
@@ -38,7 +39,8 @@ class ClansController extends Controller
 
     public function show(Clan $clan)
     {
-        return view('clans.show', compact('clan'));
+        return redirect()->route('events', $clan);
+//        return view('clans.show', compact('clan'));
     }
 
     public function edit(Clan $clan)

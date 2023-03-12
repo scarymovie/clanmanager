@@ -41,7 +41,7 @@
                                 </td>
                                 <th scope="row"
                                     class="px-10 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                    {{ $member->nickname }}
+                                    {{ $member->characters->first()->nickname }}
                                 </th>
                                 <td class="px-12 py-4">
                                     {{ $member->rank }}

@@ -16,10 +16,9 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->foreignId('clan_id')->nullable()->constrained('clans')->cascadeOnDelete();
-            $table->foreignId('event_timing_id')->constrained('event_timings')->cascadeOnDelete();
             $table->string('title')->unique();
-            $table->string('note');
-            $table->date('start_date')->nullable();
+            $table->string('note')->nullable();
+            $table->string('start_date')->nullable();
             $table->timestamps();
         });
     }

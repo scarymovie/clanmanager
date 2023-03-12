@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Auth;
 
 class EventController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('master');
+    }
 
     public function index(Request $request, Clan $clan)
     {
@@ -25,7 +29,7 @@ class EventController extends Controller
             $diffWeeks = Carbon::now()->diffInWeeks($week, false);
         }
 
-        $events = Event::where('clan_id', $clan->id)->with('status', 'weekday')->get();
+        $events = Event::where('clan_id', $clan->id)->with('status')->get();
         $member = Member::where('user_id', Auth::id())->with('characters', 'characters.type')->first();
 
         foreach ($events as $event){
@@ -40,21 +44,29 @@ class EventController extends Controller
             $dayName = Carbon::parse($event->start_date)->locale('ru_RU')->dayName;
             $event['week_day_name'] = mb_convert_case($dayName, MB_CASE_TITLE, "UTF-8");
             $event['week_day'] = Carbon::parse($event->start_date)->isoWeekday();
-            $event['time'] = $event->weekday->time;
+            $event['time'] = date('d.m.Y',strtotime($event->start_date));
         }
         $events = collect($events)->sortBy('week_day');
         $character = $member->characters->where('status', 'main')->first();
         return view('events.index', compact(['events', 'clan', 'character', 'weekday', 'diffWeeks']));
     }
 
-    public function create()
+    public function create(Clan $clan)
     {
-        //
+        return view('events.create', compact('clan'));
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Clan $clan)
     {
-        //
+        $validated = $request->all();
+        unset($validated['_token']);
+        // TODO сделать formrequest и добавить поинты
+        $event = Event::create([
+            'title' => $validated['title'],
+            'start_date' => $validated['date'],
+            'clan_id' => $clan->id
+        ]);
+        return redirect()->route('events', compact('clan'));
     }
 
     public function show(Request $request, Clan $clan, Event $event)

@@ -29,6 +29,8 @@ Route::middleware(['auth', 'clan'])->group(function (){
     Route::get('clan/{clan}/members/create', [MembersController::class, 'create'])->name('members.create');
     Route::delete('clan/{clan}/member/{member}', [MembersController::class, 'destroy'])->name('members.delete');
     Route::get('clan/{clan}/events', [EventController::class, 'index'])->name('events');
+    Route::get('clan/{clan}/events/create', [EventController::class, 'create'])->name('events.create');
+    Route::post('clan/{clan}/events', [EventController::class, 'store'])->name('events.store');
     Route::get('/clan/{clan}/event/{event}/show', [EventController::class, 'show'])->name('event.show');
     Route::get('/ajax/clan/{clan}/event_details', [EventController::class, 'showDetails'])->name('events.show_details');
     Route::get('clan/{clan}/event/{event}', [EventController::class, 'eventStatus'])->name('event.status');
