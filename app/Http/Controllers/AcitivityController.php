@@ -32,6 +32,13 @@ class AcitivityController extends Controller
             ->where('clan_id', $clan->id)
             ->get();
 
+
+        $pointsOfConfirmedEvents = $eventsList->filter(function ($value, $key){
+            if ($value->status != null && $value->status->status === 'confirmed'){
+                return $value;
+            }
+        })->sum('points');
+
         $events_all = count($eventsList);
 
         $events_confirmed = EventMemberStatus::where('clan_id', $clan->id)
@@ -39,7 +46,7 @@ class AcitivityController extends Controller
             ->where('event_date', '>', $month_start)
             ->where('event_date', '<', $month_end)
             ->where('status', 'confirmed')
-            ->with('character')
+            ->with('character', 'events')
             ->get();
 
         $countOfConfirmedEvents = count($events_confirmed);
@@ -52,7 +59,7 @@ class AcitivityController extends Controller
         $acivity_events = count($events_confirmed);
 
         return view('activity.index', compact(['clan', 'members', 'characters_types', 'activity_percent',
-            'acivity_events', 'events_all', 'eventsList', 'countOfConfirmedEvents']));
+            'acivity_events', 'events_all', 'eventsList', 'pointsOfConfirmedEvents']));
     }
 
     /**

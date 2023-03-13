@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('title')->unique();
             $table->string('note')->nullable();
             $table->string('start_date')->nullable();
+            $table->integer('points')->default(1);
             $table->timestamps();
         });
     }

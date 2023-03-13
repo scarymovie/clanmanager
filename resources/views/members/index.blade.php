@@ -7,6 +7,7 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 <a href="{{ route('members', $clan) }}">Все мемберы</a>
                 <a href="{{ route('members.create', $clan) }}">Добавить мембера</a>
+{{--                <a href="{{ route('members.requests', $clan) }}">Заявки</a>--}}
             </h2>
         </div>
     </div>

@@ -10,7 +10,7 @@
                 <h5 class="eventFullTitle ml-8 mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">{{ $event->title }}</h5>
 
                 <p class="eventFullTime mb-3 font-normal text-gray-700 dark:text-gray-400 text-center">{{ $event->week_day }}
-                    <br>{{ $event->weekday->time }}</p>
+                    <br>{{ date('H:i', strtotime($event->start_date)) }}</p>
 
                 <form action="{{ route('event.status', [$clan, $event]) }}">
                     <input type="hidden" value="{{ $difference }}" name="difference">

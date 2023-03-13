@@ -49,7 +49,7 @@
                                     @foreach($eventsList as $event)
                                         @if($event->status != null && $event->status->status === 'confirmed')
                                             <td class="px-6 py-4 text-green-600">
-                                                1
+                                                {{ $event->points }}
                                             </td>
                                         @else
                                             <td class="px-6 py-4 text-red-600">
@@ -58,7 +58,7 @@
                                         @endif
                                     @endforeach
                                     <td class="px-6 py-4 text-black-600">
-                                        <strong><b>{{ $countOfConfirmedEvents }}</b></strong>
+                                        <strong><b>{{ $pointsOfConfirmedEvents }}</b></strong>
                                     </td>
                                 @endforeach
                             </tr>

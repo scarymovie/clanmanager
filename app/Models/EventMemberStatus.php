@@ -22,7 +22,7 @@ class EventMemberStatus extends Model
 
     public function events()
     {
-        return $this->belongsToMany(Event::class);
+        return $this->belongsTo(Event::class, 'event_id');
     }
 
     public function character()

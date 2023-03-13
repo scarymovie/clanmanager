@@ -64,7 +64,8 @@ class EventController extends Controller
         $event = Event::create([
             'title' => $validated['title'],
             'start_date' => $validated['date'],
-            'clan_id' => $clan->id
+            'clan_id' => $clan->id,
+            'points' => $validated['points'],
         ]);
         return redirect()->route('events', compact('clan'));
     }
