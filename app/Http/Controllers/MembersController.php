@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class MembersController extends Controller
 {
+
     public function index(Clan $clan)
     {
         $members = Member::where('clan_id', $clan->id)->get();
@@ -82,7 +83,6 @@ class MembersController extends Controller
     public function getInvitedUserData($token)
     {
         $clan = Clan::where('invite_link', $token)->firstOrFail();
-
-        return view('members.invited', compact('clan'));
+        return redirect()->route('clan.characters.create', $clan)->with('message', 'Для продолжения создайте персонажа');
     }
 }

@@ -13,11 +13,6 @@ use Illuminate\Http\Request;
 
 class AcitivityController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index(Clan $clan)
     {
         $month_start = Carbon::now()->startOfMonth();

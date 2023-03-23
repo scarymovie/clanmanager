@@ -14,17 +14,7 @@
                         <a href="{{ route('clan.characters.create', $clan) }}">здесь</a>
                     </h1>
                 @else
-                    <div class="inline-flex rounded-md shadow-sm" role="group">
-                        <a href="{{ route('events', $clan) }}" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
-                            Ивенты
-                        </a>
-                        <a href="{{ route('events.create', $clan) }}" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
-                            Создать
-                        </a>
-                        <a type="button" class="px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-r-md hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600 dark:focus:ring-blue-500 dark:focus:text-white">
-                            Редактировать
-                        </a>
-                    </div>
+
                     <div style="position: sticky; top: 2%;"
                          class="eventFull hidden float-right min-w-[66%] max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 
@@ -65,19 +55,19 @@
                                    placeholder="Укажите дату">
                         </label>
                     </div>
-                    @foreach($events as $event)
-                        @if(isset($diffWeeks) && $diffWeeks < 0)
+                    @foreach($guildWars as $guildWar)
+                        @if($guildWar->date < now())
                             <div
                                 class="mb-4 test block max-w-xs p-6 bg-white border border-gray-200 rounded-lg shadow-md
                                  hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 event">
                                 <div style="display: flex;">
                                     <div style="display: inline">
-                                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $event->title }}</h5>
-                                        <p class="font-normal text-gray-700 dark:text-gray-400">{{ $event->week_day_name }}
-                                            <br>{{ date('H:i', strtotime($event->start_date)) }}</p>
+                                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $guildWar->title }}</h5>
+                                        <p class="font-normal text-gray-700 dark:text-gray-400">
+                                            <br>{{  date('d.m.Y H:i', strtotime($guildWar->date)) }}</p>
                                     </div>
                                     <div style="display: inline; margin-left: auto">
-                                        <button type="button" id="{{ $event->id }}"
+                                        <button type="button" id="{{ $guildWar->id }}"
                                                 class="eventUnique ml-20 text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800">
                                             <svg aria-hidden="true" class="w-5 h-5" fill="currentColor"
                                                  viewBox="0 0 20 20"
@@ -90,92 +80,28 @@
                                         </button>
                                     </div>
                                 </div>
-                                @if($event->status !== 'confirmed')
-                                <div
-                                    class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-                                    <a href="{{ route('event.show', [$clan, $event, 'difference' => $diffWeeks]) }}">
-                                        Отчитаться
-                                    </a>
-                                </div>
-                                @endif
-                            </div>
-                        @elseif($event['week_day'] < $weekday)
-                            <div
-                                class="mb-4 test block max-w-xs p-6 bg-white border border-gray-200 rounded-lg shadow-md
-                                 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 event">
-                                <div style="display: flex;">
-                                    <div style="display: inline">
-                                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $event->title }}</h5>
-                                        <p class="font-normal text-gray-700 dark:text-gray-400">{{ $event->week_day_name }}
-                                            <br>{{  date('H:i', strtotime($event->start_date)) }}</p>
-                                    </div>
-                                    <div style="display: inline; margin-left: auto">
-                                        <button type="button" id="{{ $event->id }}"
-                                                class="eventUnique ml-20 text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800">
-                                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor"
-                                                 viewBox="0 0 20 20"
-                                                 xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd"
-                                                      d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                                                      clip-rule="evenodd"></path>
-                                            </svg>
-                                            <span class="sr-only">Icon description</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                @if($event->status !== 'confirmed')
+                                @if($guildWar->status !== 'confirmed')
                                     <div
                                         class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-                                        <a href="{{ route('event.show', [$clan, $event, 'difference' => $diffWeeks]) }}">
+                                        <a href="{{ route('event.show', [$clan, $guildWar, 'difference' => $diffWeeks]) }}">
                                             Отчитаться
                                         </a>
                                     </div>
                                 @endif
                             </div>
-                        @elseif($event['week_day'] === $weekday && \Carbon\Carbon::parse( date('H:i', strtotime($event->start_date)))->format('H:i') < now())
-                            <div
-                                class="mb-4 test block max-w-xs p-6 bg-white border border-gray-200 rounded-lg shadow-md
-                                 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 event">
-                                <div style="display: flex;">
-                                    <div style="display: inline">
-                                        <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $event->title }}</h5>
-                                        <p class="font-normal text-gray-700 dark:text-gray-400">{{ $event->week_day_name }}
-                                            <br>{{  date('H:i', strtotime($event->start_date)) }}</p>
-                                    </div>
-                                    <div style="display: inline; margin-left: auto">
-                                        <button type="button" id="{{ $event->id }}"
-                                                class="eventUnique ml-20 text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800">
-                                            <svg aria-hidden="true" class="w-5 h-5" fill="currentColor"
-                                                 viewBox="0 0 20 20"
-                                                 xmlns="http://www.w3.org/2000/svg">
-                                                <path fill-rule="evenodd"
-                                                      d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                                                      clip-rule="evenodd"></path>
-                                            </svg>
-                                            <span class="sr-only">Icon description</span>
-                                        </button>
-                                    </div>
-                                </div>
-                                <div
-                                    class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-                                    <a href="{{ route('event.show', [$clan, $event]) }}">
-                                        Отчитаться
-                                    </a>
-                                </div>
-                            </div>
-                        @else
-                            @if($event->status === null)
+                        @elseif($guildWar->date > now())
+                            @if($guildWar->status === null)
                                 <div
                                     class="mb-4 test block max-w-xs p-6 bg-white border border-gray-200 rounded-lg shadow-md
                                  hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 event">
                                     <div style="display: flex;">
                                         <div style="display: inline">
-                                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $event->title }}</h5>
-                                            <p class="font-normal text-gray-700 dark:text-gray-400">{{ $event->week_day_name }}
-                                                <br>{{  date('H:i', strtotime($event->start_date)) }}</p>
+                                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $guildWar->title }}</h5>
+                                            <p class="font-normal text-gray-700 dark:text-gray-400">
+                                                <br>{{  date('d.m.Y H:i', strtotime($guildWar->date)) }}</p>
                                         </div>
                                         <div style="display: inline; margin-left: auto">
-                                            <button type="button" id="{{ $event->id }}"
+                                            <button type="button" id="{{ $guildWar->id }}"
                                                     class="eventUnique ml-20 text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800">
                                                 <svg aria-hidden="true" class="w-5 h-5" fill="currentColor"
                                                      viewBox="0 0 20 20"
@@ -190,29 +116,29 @@
                                     </div>
                                     <div
                                         class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-                                        <a href="{{ route('event.status', [$clan, $event,'status' => 'accept']) }}">
+                                        <a href="{{ route('gvg.status', [$clan, $guildWar,'status' => 'accept']) }}">
                                             Приду123
                                         </a>
                                     </div>
                                     <div
                                         class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-                                        <a href="{{ route('event.status', [$clan, $event, 'status' => 'decline']) }}">
+                                        <a href="{{ route('gvg.status', [$clan, $guildWar, 'status' => 'decline']) }}">
                                             Не приду
                                         </a>
                                     </div>
                                 </div>
-                            @elseif($event->status === 'decline')
+                            @elseif($guildWar->status === 'decline')
                                 <div
                                     class="mb-4 block max-w-xs p-6 bg-red-500 border border-gray-200 rounded-lg shadow-md
                                         dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 event">
                                     <div style="display: flex;">
                                         <div style="display: inline">
-                                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $event->title }}</h5>
-                                            <p class="font-normal text-gray-700 dark:text-gray-400">{{ $event->week_day_name }}
-                                                <br> {{  date('H:i', strtotime($event->start_date)) }}</p>
+                                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $guildWar->title }}</h5>
+                                            <p class="font-normal text-gray-700 dark:text-gray-400">{{ $guildWar->week_day_name }}
+                                                <br> {{  date('d.m.Y H:i', strtotime($guildWar->date)) }}</p>
                                         </div>
                                         <div style="display: inline; margin-left: auto">
-                                            <button type="button" id="{{ $event->id }}"
+                                            <button type="button" id="{{ $guildWar->id }}"
                                                     class="eventUnique ml-20 text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800">
                                                 <svg aria-hidden="true" class="w-5 h-5" fill="currentColor"
                                                      viewBox="0 0 20 20"
@@ -228,23 +154,23 @@
 
                                     <div
                                         class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-20 mb-2">
-                                        <a href="{{ route('event.status', [$clan, $event,'status' => 'accept']) }}">
+                                        <a href="{{ route('event.status', [$clan, $guildWar,'status' => 'accept']) }}">
                                             Приду
                                         </a>
                                     </div>
                                 </div>
-                            @elseif($event->status === 'accept')
+                            @elseif($guildWar->status === 'accept')
                                 <div
                                     class="mb-4 block max-w-xs p-6 bg-green-300 border border-gray-200 rounded-lg shadow-md
                                         hover:bg-green-300 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 event">
                                     <div style="display: flex;">
                                         <div style="display: inline">
-                                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $event->title }}</h5>
-                                            <p class="font-normal text-gray-700 dark:text-gray-400">{{ $event->week_day_name }}
-                                                <br> {{  date('H:i', strtotime($event->start_date)) }}</p>
+                                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $guildWar->title }}</h5>
+                                            <p class="font-normal text-gray-700 dark:text-gray-400">{{ $guildWar->week_day_name }}
+                                                <br> {{  date('d.m.Y H:i', strtotime($guildWar->date)) }}</p>
                                         </div>
                                         <div style="display: inline; margin-left: auto">
-                                            <button type="button" id="{{ $event->id }}"
+                                            <button type="button" id="{{ $guildWar->id }}"
                                                     class="eventUnique ml-20 text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800">
                                                 <svg aria-hidden="true" class="w-5 h-5" fill="currentColor"
                                                      viewBox="0 0 20 20"
@@ -259,34 +185,9 @@
                                     </div>
                                     <div
                                         class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-red-300 dark:focus:ring-red-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-20 mb-2">
-                                        <a href="{{ route('event.status', [$clan, $event, 'status' => 'decline']) }}">
+                                        <a href="{{ route('event.status', [$clan, $guildWar, 'status' => 'decline']) }}">
                                             Не приду
                                         </a>
-                                    </div>
-                                </div>
-                            @elseif($event->status === 'confirmed')
-                                <div
-                                    class="mb-4 test block max-w-xs p-6 bg-white border border-gray-200 rounded-lg shadow-md
-                                 hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700 event">
-                                    <div style="display: flex;">
-                                        <div style="display: inline">
-                                            <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $event->title }}</h5>
-                                            <p class="font-normal text-gray-700 dark:text-gray-400">{{ $event->week_day_name }}
-                                                <br>{{ date('H:i', strtotime($event->start_date)) }}</p>
-                                        </div>
-                                        <div style="display: inline; margin-left: auto">
-                                            <button type="button" id="{{ $event->id }}"
-                                                    class="eventUnique ml-20 text-blue-700 border border-blue-700 hover:bg-blue-700 hover:text-white focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center dark:border-blue-500 dark:text-blue-500 dark:hover:text-white dark:focus:ring-blue-800">
-                                                <svg aria-hidden="true" class="w-5 h-5" fill="currentColor"
-                                                     viewBox="0 0 20 20"
-                                                     xmlns="http://www.w3.org/2000/svg">
-                                                    <path fill-rule="evenodd"
-                                                          d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
-                                                          clip-rule="evenodd"></path>
-                                                </svg>
-                                                <span class="sr-only">Icon description</span>
-                                            </button>
-                                        </div>
                                     </div>
                                 </div>
                             @endif
@@ -302,16 +203,16 @@
         $(document).ready(function () {
             $(document).on('click', '.eventUnique', function () {
 
-                let event_id = $(this).attr('id')
+                let gvg_id = $(this).attr('id')
 
                 $.ajax({
                     method: "get",
-                    url: "{{ route('events.show_details', [$clan]) }}",
-                    data: {event: event_id},
+                    url: "{{ route('gvg.show_details', [$clan]) }}",
+                    data: {gvg: gvg_id},
                     success: function (data) {
                         console.log(data)
                         $('.eventFullTitle').text(data.title)
-                        $('.eventFullTime').text(data.weekday + ' ' + data.time)
+                        $('.eventFullTime').text(data.time)
                     }
                 })
                 $('.eventFull').show()

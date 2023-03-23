@@ -4,6 +4,7 @@ use App\Http\Controllers\AcitivityController;
 use App\Http\Controllers\CharactersController;
 use App\Http\Controllers\ClansController;
 use App\Http\Controllers\EventController;
+use App\Http\Controllers\GuildWarsController;
 use App\Http\Controllers\MembersController;
 use App\Http\Controllers\ProfilesController;
 use App\Http\Controllers\User\AjaxController;
@@ -35,11 +36,15 @@ Route::middleware(['auth', 'clan'])->group(function (){
     Route::get('/ajax/clan/{clan}/event_details', [EventController::class, 'showDetails'])->name('events.show_details');
     Route::get('clan/{clan}/event/{event}', [EventController::class, 'eventStatus'])->name('event.status');
     Route::delete('/clan/{clan}/characters/{character}/destroy', [CharactersController::class, 'destroyAll'])->name('character.delete');
-    Route::resource('clan.characters', CharactersController::class);
     Route::resource('clan.activity', AcitivityController::class);
+    Route::resource('clan.gvg', GuildWarsController::class);
+    Route::get('/ajax/clan/{clan}/gvg_details', [GuildWarsController::class, 'showDetails'])->name('gvg.show_details');
+    Route::get('clan/{clan}/gvg/{guildWar}/status', [GuildWarsController::class, 'gvgStatus'])->name('gvg.status');
+    Route::get('clan/{clan}/gvg/{guildWar}/show', [GuildWarsController::class, 'show'])->name('gvg.show');
 });
 
 Route::middleware(['auth'])->group(function (){
+    Route::resource('clan.characters', CharactersController::class);
     Route::post('clan/{clan}/members', [MembersController::class, 'store'])->name('members.store');
     Route::get('invited/{token}', [MembersController::class, 'getInvitedUserData'])->name('invited_user');
     Route::resource('clan', ClansController::class);

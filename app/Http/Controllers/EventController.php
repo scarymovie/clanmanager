@@ -21,33 +21,29 @@ class EventController extends Controller
     {
         $week = $request->date;
 
-        if ($week != null){
-            $weekday = Carbon::parse($week)->isoWeekday();
-            $diffWeeks = Carbon::now()->diffInWeeks($week, false);
-        } else {
-            $weekday = Carbon::parse()->isoWeekday();
-            $diffWeeks = Carbon::now()->diffInWeeks($week, false);
-        }
+        $weekday = Carbon::parse($week ?? now())->isoWeekday();
+        $diffWeeks = Carbon::now()->diffInWeeks($week, false);
 
         $events = Event::where('clan_id', $clan->id)->with('status')->get();
-        $member = Member::where('user_id', Auth::id())->with('characters', 'characters.type')->first();
+        $member = Member::where('user_id', Auth::id())->with('characters.type')->first();
 
-        foreach ($events as $event){
-
+        $events = $events->map(function ($event) use ($member) {
             $eventMemberStatus = EventMemberStatus::query()
                 ->where('event_id', $event->id)
                 ->where('member_id', $member->id)
-                ->where('clan_id', $clan->id)
+                ->where('clan_id', $event->clan_id)
                 ->first();
 
-            $event['status'] = $eventMemberStatus['status'] ?? null;
-            $dayName = Carbon::parse($event->start_date)->locale('ru_RU')->dayName;
-            $event['week_day_name'] = mb_convert_case($dayName, MB_CASE_TITLE, "UTF-8");
-            $event['week_day'] = Carbon::parse($event->start_date)->isoWeekday();
-            $event['time'] = date('d.m.Y',strtotime($event->start_date));
-        }
-        $events = collect($events)->sortBy('week_day');
+            $event->status = optional($eventMemberStatus)->status;
+            $event->week_day_name = Carbon::parse($event->start_date)->locale('ru_RU')->dayName;
+            $event->week_day = Carbon::parse($event->start_date)->isoWeekday();
+            $event->time = date('d.m.Y', strtotime($event->start_date));
+
+            return $event;
+        })->sortBy('week_day');
+
         $character = $member->characters->where('status', 'main')->first();
+
         return view('events.index', compact(['events', 'clan', 'character', 'weekday', 'diffWeeks']));
     }
 
@@ -84,7 +80,6 @@ class EventController extends Controller
     {
         $validated = $request->all();
         $event = Event::find($validated['event']);
-//        $user = Auth::user();
         return response()->json($event);
     }
 
@@ -109,24 +104,30 @@ class EventController extends Controller
         $event_day = Carbon::parse($event->start_date);
 
         $currentEvent = Carbon::parse()->diffInWeeks($event_day);
-        $event_date = Carbon::parse($event_day)->addWeek($currentEvent);
-        if ($difference){
-            $event_date = $event_date->addWeek($difference);
-        }
+        $event_date = Carbon::parse($event_day)->addWeeks($currentEvent)->addWeeks($difference ?? 0);
 
         $validated['event_id'] = $event->id;
         $validated['note'] = $request->note;
         $validated['clan_id'] = $clan->id;
-        $validated['status'] = 'confirmed';
+        $validated['status'] = $request->status;
 
         $member = Member::where('clan_id', $validated['clan_id'])->where('user_id', Auth::id())->with('characters')->first();
         $validated['character_id'] = $member->characters->where('status', 'main')->first()->id;
         $validated['member_id'] = $member->id;
 
         $eventMember = EventMemberStatus::updateOrCreate(
-            ['clan_id' => $validated['clan_id'], 'event_id' => $validated['event_id'],
-                'member_id' => $validated['member_id'], 'character_id' => $validated['character_id']],
-            ['status' => $validated['status'], 'event_date' => $event_date, 'party_leader_id' => '1', 'note' => $validated['note']]
+            [
+                'clan_id' => $validated['clan_id'],
+                'event_id' => $validated['event_id'],
+                'member_id' => $validated['member_id'],
+                'character_id' => $validated['character_id']
+            ],
+            [
+                'status' => $validated['status'],
+                'event_date' => $event_date,
+                'party_leader_id' => '1',
+                'note' => $validated['note']
+            ]
         );
 //        dd($eventMember);
         return redirect()->route('events', $clan);
