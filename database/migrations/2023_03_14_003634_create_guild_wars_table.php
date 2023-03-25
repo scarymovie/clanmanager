@@ -18,7 +18,7 @@ return new class extends Migration
             $table->foreignId('clan_id')->nullable()->constrained('clans')->cascadeOnDelete();
             $table->string('title');
             $table->string('note')->nullable();
-            $table->string('date')->nullable();
+            $table->dateTime('date')->nullable();
             $table->integer('points')->default(1);
             $table->timestamps();
         });

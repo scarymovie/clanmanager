@@ -2,23 +2,19 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\CharactersType;
 use Closure;
 use Illuminate\Http\Request;
 
 class RedirectToCharacters
 {
-    /**
-     * Handle an incoming request.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \Closure(\Illuminate\Http\Request): (\Illuminate\Http\Response|\Illuminate\Http\RedirectResponse)  $next
-     * @return \Illuminate\Http\Response|\Illuminate\Http\RedirectResponse
-     */
+
     public function handle(Request $request, Closure $next)
     {
         $clan = $request->clan;
         if ($clan->members->isEmpty()){
-            return redirect()->route('clan.characters.create', $clan)->with('message', 'Для продолжения создайте персонажа');
+            $characters_type = CharactersType::all();
+            return response()->view('middleware.no_characters', compact('clan', 'characters_type'));
         }
         return $next($request);
     }

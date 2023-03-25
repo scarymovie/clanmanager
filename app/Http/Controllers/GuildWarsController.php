@@ -12,11 +12,27 @@ use Illuminate\Support\Facades\Auth;
 
 class GuildWarsController extends Controller
 {
-
-    public function index(Clan $clan)
+    public function __construct()
     {
-        $guildWars = GuildWars::where('clan_id', $clan->id)->with('status')->get();
-        $member = Member::where('user_id', Auth::id())->with('characters', 'characters.type')->first();
+        $this->middleware('checkCharacter');
+    }
+
+    public function index(Request $request, Clan $clan)
+    {
+        $date = Carbon::parse($request->date);
+        $startOfWeek = Carbon::parse($date ?? now())->startOfWeek();
+        $endOfWeek = Carbon::parse($date ?? now())->endOfWeek();
+
+        $guildWars = GuildWars::query()
+            ->whereBetween('date', [$startOfWeek, $endOfWeek])
+            ->where('clan_id', $clan->id)
+            ->with('status')
+            ->get();
+
+        $member = Member::query()
+            ->where('user_id', Auth::id())
+            ->with('characters', 'characters.type')
+            ->first();
         $character = $member->characters->where('status', 'main')->first();
         return view('guildwars.index', compact('clan', 'member', 'character', 'guildWars'));
     }
@@ -26,14 +42,21 @@ class GuildWarsController extends Controller
         //
     }
 
-    public function store(Request $request)
+    public function store(Request $request, Clan $clan, GuildWars $gvg)
     {
         //
     }
 
-    public function show(GuildWars $guildWars)
+    public function show(Clan $clan, GuildWars $gvg)
     {
-        //
+        $guildWar = $gvg;
+        $member = Member::where('user_id', Auth::id())
+            ->where('clan_id', $clan->id)
+            ->with('characters', 'characters.type')
+            ->first();
+        $characters = $member->characters->where('status', 'main');
+
+        return view('guildwars.show', compact('clan','guildWar', 'characters'));
     }
 
     public function showDetails(Request $request, Clan $clan)
@@ -48,9 +71,29 @@ class GuildWarsController extends Controller
         //
     }
 
-    public function update(Request $request, GuildWars $guildWars)
+    public function update(Request $request, Clan $clan, GuildWars $gvg)
     {
-        //
+        $validated = $request->all();
+        $member = Member::query()
+            ->where('user_id', Auth::id())
+            ->where('clan_id', $clan->id)
+            ->with('characters', 'characters.type')
+            ->first();
+
+        $gvg_status = GuildWarsMemberStatus::create(
+            [
+                'guild_wars_id' => $gvg->id,
+                'member_id' => $member->id,
+                'clan_id' => $clan->id,
+                'character_id' => $validated['character_id'],
+                'title' => 'confirmed',
+                'party_leader_id' => 1,
+                'image' => $validated['image'] ?? '',
+                'note' => $validated['note'] ?? ''
+            ]
+        );
+
+        return redirect()->route('clan.gvg.index', compact('clan'));
     }
 
     public function destroy(GuildWars $guildWars)

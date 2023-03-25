@@ -8,7 +8,13 @@
     <a href="{{ route('events', $clan) }}"
        @if(request()->routeIs(['event', 'events']))
            class="border-b-2 border-indigo-500"
-        @endif>Ивенты</a>
+        @endif>Ивенты
+    </a>
+    <a href="{{ route('clan.gvg.index', $clan) }}"
+       @if(request()->routeIs(['clan.gvg.*']))
+           class="border-b-2 border-indigo-500"
+        @endif>GvG
+    </a>
     <a href="{{ route('clan.characters.index', $clan) }}">Мои персонажи</a>
     <a href="">Управление</a>
     <a href="{{ route('clan.activity.index', $clan) }}">Активность</a>

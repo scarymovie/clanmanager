@@ -12,7 +12,7 @@ class ClansController extends Controller
     public function __construct()
     {
         $this->middleware('clan', ['except' => ['index', 'create', 'store']]);
-        $this->middleware('master', ['only' => ['show']]);
+        $this->middleware('checkCharacter', ['only' => ['show']]);
     }
 
     public function index()

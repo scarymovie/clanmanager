@@ -37,10 +37,12 @@ Route::middleware(['auth', 'clan'])->group(function (){
     Route::get('clan/{clan}/event/{event}', [EventController::class, 'eventStatus'])->name('event.status');
     Route::delete('/clan/{clan}/characters/{character}/destroy', [CharactersController::class, 'destroyAll'])->name('character.delete');
     Route::resource('clan.activity', AcitivityController::class);
-    Route::resource('clan.gvg', GuildWarsController::class);
+    Route::resource('clan.gvg', GuildWarsController::class)->names([
+        'store' => 'clan.gvg.storegvg'
+    ]);
     Route::get('/ajax/clan/{clan}/gvg_details', [GuildWarsController::class, 'showDetails'])->name('gvg.show_details');
     Route::get('clan/{clan}/gvg/{guildWar}/status', [GuildWarsController::class, 'gvgStatus'])->name('gvg.status');
-    Route::get('clan/{clan}/gvg/{guildWar}/show', [GuildWarsController::class, 'show'])->name('gvg.show');
+//    Route::get('clan/{clan}/gvg/{guildWar}/show', [GuildWarsController::class, 'show'])->name('gvg.show');
 });
 
 Route::middleware(['auth'])->group(function (){

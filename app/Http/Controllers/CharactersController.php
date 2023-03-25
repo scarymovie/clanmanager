@@ -20,8 +20,11 @@ class CharactersController extends Controller
         $member = Member::where('clan_id', $clan->id)
             ->where('user_id', Auth::id())
             ->first();
+        $characters = [];
+        if ($member != null){
+            $characters = Character::where('member_id', $member->id)->orderBy('status')->with('type')->get();
+        }
 
-        $characters = Character::where('member_id', $member->id)->orderBy('status')->with('type')->get();
 
         return view('characters.index', compact('clan', 'characters'));
     }

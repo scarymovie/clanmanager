@@ -7,13 +7,14 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
 
-                <h5 class="eventFullTitle ml-8 mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">{{ $event->title }}</h5>
+                <h5 class="eventFullTitle ml-8 mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">{{ $guildWar->title }}</h5>
 
-                <p class="eventFullTime mb-3 font-normal text-gray-700 dark:text-gray-400 text-center">{{ $event->week_day }}
-                    <br>{{ date('H:i', strtotime($event->start_date)) }}</p>
-
-                <form action="{{ route('event.status', [$clan, $event]) }}">
-                    <input type="hidden" value="{{ $difference }}" name="difference">
+                <p class="eventFullTime mb-3 font-normal text-gray-700 dark:text-gray-400 text-center">
+                    <br>{{ date('H:i', strtotime($guildWar->date)) }}</p>
+{{--@dd(route('clan.gvg.update', [$clan, $guildWar]))--}}
+                <form action="{{ route('clan.gvg.update', [$clan, $guildWar]) }}" method="post">
+                    @csrf
+                    @method('PUT')
                     <div>
                         <label for="types" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Персонаж</label>
                         <select id="types" name="character_id"

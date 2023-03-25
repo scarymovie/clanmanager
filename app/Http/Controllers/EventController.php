@@ -14,7 +14,7 @@ class EventController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('master');
+        $this->middleware('checkCharacter');
     }
 
     public function index(Request $request, Clan $clan)
