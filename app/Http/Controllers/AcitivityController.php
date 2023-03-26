@@ -7,6 +7,8 @@ use App\Models\CharactersType;
 use App\Models\Clan;
 use App\Models\Event;
 use App\Models\EventMemberStatus;
+use App\Models\GuildWars;
+use App\Models\GuildWarsMemberStatus;
 use App\Models\Member;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -27,6 +29,15 @@ class AcitivityController extends Controller
             ->where('clan_id', $clan->id)
             ->get();
 
+        $gvgList = GuildWars::query()
+            ->where('clan_id', $clan->id)
+            ->get();
+
+        $pointsOfConfirmedGvgs = $gvgList->filter(function ($value, $key){
+            if ($value->status != null && $value->status->title === 'confirmed'){
+                return $value;
+            }
+        })->sum('points');
 
         $pointsOfConfirmedEvents = $eventsList->filter(function ($value, $key){
             if ($value->status != null && $value->status->status === 'confirmed'){
@@ -34,7 +45,10 @@ class AcitivityController extends Controller
             }
         })->sum('points');
 
-        $events_all = count($eventsList);
+        $pointsOfConfirmedEvents = $pointsOfConfirmedEvents + $pointsOfConfirmedGvgs;
+
+        $events_all = count($eventsList) + count($gvgList);
+        $gvgs_all = count($gvgList);
 
         $events_confirmed = EventMemberStatus::where('clan_id', $clan->id)
             ->whereIn('member_id', $membersIds)
@@ -44,17 +58,37 @@ class AcitivityController extends Controller
             ->with('character', 'events')
             ->get();
 
+        $gvgs_confirmed = GuildWarsMemberStatus::where('clan_id', $clan->id)
+            ->whereIn('member_id', $membersIds)
+            ->where('updated_at', '>', $month_start)
+            ->where('updated_at', '<', $month_end)
+            ->where('title', 'confirmed')
+            ->get();
+
         $countOfConfirmedEvents = count($events_confirmed);
+        $countOfConfirmedGvgs = count($gvgs_confirmed);
+
         $clan_events = count(Event::where('clan_id', $clan->id)->get());
-        if ($clan_events != 0){
-            $activity_percent = round( $countOfConfirmedEvents / $clan_events * 100);
-        } else {
+        $clan_gvgs = count(GuildWars::where('clan_id', $clan->id)->get());
+
+        if ($clan_events != 0 && $clan_gvgs != 0){
+            $activity_percent = round( ($countOfConfirmedEvents + $countOfConfirmedGvgs) / ($clan_events + $clan_gvgs) * 100, 2);
+        }
+        elseif ($clan_events === 0){
+            $activity_percent = round(  $countOfConfirmedGvgs / ($clan_gvgs) * 100);
+        }
+        elseif ($clan_gvgs === 0){
+            $activity_percent = round(  $countOfConfirmedEvents / $clan_events * 100);
+        }
+        else {
             $activity_percent = 0;
         }
-        $acivity_events = count($events_confirmed);
+
+
+        $acivity_events = count($events_confirmed) + count($gvgs_confirmed);
 
         return view('activity.index', compact(['clan', 'members', 'characters_types', 'activity_percent',
-            'acivity_events', 'events_all', 'eventsList', 'pointsOfConfirmedEvents']));
+            'acivity_events', 'events_all', 'eventsList', 'pointsOfConfirmedEvents', 'gvgList']));
     }
 
     /**

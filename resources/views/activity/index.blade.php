@@ -25,6 +25,11 @@
                                         {{ $event->title }}
                                     </th>
                                 @endforeach
+                                @foreach($gvgList as $gvg)
+                                    <th scope="col" class="px-6 py-3">
+                                        {{ $gvg->title }}
+                                    </th>
+                                @endforeach
                                 <th scope="col" class="px-6 py-3">
                                     Сумма баллов
                                 </th>
@@ -57,6 +62,17 @@
                                             </td>
                                         @endif
                                     @endforeach
+                                @foreach($gvgList as $gvg)
+                                        @if($gvg->status != null && $gvg->status->title === 'confirmed')
+                                            <td class="px-6 py-4 text-green-600">
+                                                {{ $gvg->points }}
+                                            </td>
+                                        @else
+                                            <td class="px-6 py-4 text-red-600">
+                                                0
+                                            </td>
+                                        @endif
+                                @endforeach
                                     <td class="px-6 py-4 text-black-600">
                                         <strong><b>{{ $pointsOfConfirmedEvents }}</b></strong>
                                     </td>
