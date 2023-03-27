@@ -19,7 +19,7 @@
 
                 @foreach(Auth::user()->clans as $clan)
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('clan.show', $clan)" :active="request()->routeIs('clan.*','members', 'members.*', 'events')">
+                    <x-nav-link :href="route('clan.show', $clan)" :active="request()->clan->id === $clan->id && request()->routeIs('clan.*','members', 'members.*', 'events', 'event.*') && !request()->routeIs('clan.index')">
                         {{ $clan->title }}
                     </x-nav-link>
                 </div>

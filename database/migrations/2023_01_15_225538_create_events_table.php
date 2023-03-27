@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('events', function (Blueprint $table) {
             $table->id();
             $table->foreignId('clan_id')->nullable()->constrained('clans')->cascadeOnDelete();
-            $table->string('title')->unique();
+            $table->string('title');
             $table->string('note')->nullable();
             $table->string('start_date')->nullable();
             $table->integer('points')->default(1);

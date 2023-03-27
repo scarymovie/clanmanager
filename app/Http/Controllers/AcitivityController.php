@@ -56,9 +56,13 @@ class AcitivityController extends Controller
         $clan_events = Event::where('clan_id', $clan->id)->count();
         $clan_gvgs = GuildWars::where('clan_id', $clan->id)->count();
 
-        $activity_percent = ($clan_events != 0 && $clan_gvgs != 0) ? round(($countOfConfirmedEvents + $countOfConfirmedGvgs) / ($clan_events + $clan_gvgs) * 100, 2)
-            : ($clan_events === 0 ? round($countOfConfirmedGvgs / $clan_gvgs * 100)
-                : ($clan_gvgs === 0 ? round($countOfConfirmedEvents / $clan_events * 100) : 0));
+        $activity_percent = 0;
+        if ($clan_events != 0 || $clan_gvgs != 0) {
+            $activity_percent = ($clan_events != 0 && $clan_gvgs != 0) ? round(($countOfConfirmedEvents + $countOfConfirmedGvgs) / ($clan_events + $clan_gvgs) * 100, 2) : 0;
+            $activity_percent = ($clan_events === 0) ? round($countOfConfirmedGvgs / $clan_gvgs * 100) : $activity_percent;
+            $activity_percent = ($clan_gvgs === 0) ? round($countOfConfirmedEvents / $clan_events * 100) : $activity_percent;
+        }
+
 
         $acivity_events = $events_confirmed->merge($gvgs_confirmed)->count();
 

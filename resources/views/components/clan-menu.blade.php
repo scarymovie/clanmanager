@@ -6,7 +6,7 @@
         Мемберы
     </a>
     <a href="{{ route('events', $clan) }}"
-       @if(request()->routeIs(['event', 'events']))
+       @if(request()->routeIs(['event.*', 'events']))
            class="border-b-2 border-indigo-500"
         @endif>Ивенты
     </a>
@@ -15,9 +15,14 @@
            class="border-b-2 border-indigo-500"
         @endif>GvG
     </a>
-    <a href="{{ route('clan.characters.index', $clan) }}">Мои персонажи</a>
-    <a href="">Управление</a>
-    <a href="{{ route('clan.activity.index', $clan) }}">Активность</a>
-    <a href="">Отписи</a>
-    <a href="">Офицерка</a>
+    <a href="{{ route('clan.characters.index', $clan) }}"
+        @if(request()->routeIs(['clan.characters.*']))
+        class="border-b-2 border-indigo-500"
+        @endif>Мои персонажи
+    </a>
+    <a href="{{ route('clan.activity.index', $clan) }}"
+       @if(request()->routeIs(['clan.activity.*']))
+        class="border-b-2 border-indigo-500"
+        @endif>Активность</a>
+{{--    <a href="">Управление</a>--}}
 </h2>
