@@ -25,7 +25,7 @@ class EventController extends Controller
         $diffWeeks = Carbon::now()->diffInWeeks($week, false);
 
         $events = Event::where('clan_id', $clan->id)->with('status')->get();
-        $member = Member::where('user_id', Auth::id())->with('characters.type')->first();
+        $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->with('characters.type')->first();
 
         $events = $events->map(function ($event) use ($member) {
             $eventMemberStatus = EventMemberStatus::query()
@@ -44,7 +44,7 @@ class EventController extends Controller
 
         $character = $member->characters->where('status', 'main')->first();
 
-        return view('events.index', compact(['events', 'clan', 'character', 'weekday', 'diffWeeks']));
+        return view('events.index', compact(['events', 'clan', 'character', 'weekday', 'diffWeeks', 'member']));
     }
 
     public function create(Clan $clan)

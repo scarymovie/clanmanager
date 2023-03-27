@@ -1,15 +1,22 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-clan-menu :clan="$clan"></x-clan-menu>
+        <x-clan-menu :clan="$clan" :member="$auth_member"></x-clan-menu>
     </x-slot>
-    <div class="bg-white shadow mt-0.5">
-        <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                <a href="{{ route('members', $clan) }}">Все мемберы</a>
-                <a href="{{ route('members.create', $clan) }}">Добавить мембера</a>
-            </h2>
-        </div>
-    </div>
+
+    @if($auth_member->hasRole('Master'))
+        <ul class="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
+            <li class="w-full">
+                <a href="{{ route('members', $clan) }}"
+                   class="@if(request()->routeIs('members')) text-gray-900 bg-gray-100 @else bg-white @endif inline-block w-full p-4 rounded-l-lg focus:ring-4 focus:ring-blue-300 focus:outline-none
+                   dark:bg-gray-700 dark:text-white" aria-current="page">Все мемберы</a>
+            </li>
+            <li class="w-full">
+                <a href="{{ route('members.create', [$clan, $auth_member]) }}"
+                   class="@if(request()->routeIs('members.create'))text-gray-900 bg-gray-100 @else bg-white @endif inline-block w-full p-4 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none
+                   dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">Заявки в клан</a>
+            </li>
+        </ul>
+    @endif
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">

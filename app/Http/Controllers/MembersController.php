@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Character;
+use App\Models\CharactersType;
 use App\Models\Clan;
 use App\Models\member;
 use App\Service\CharacterService;
@@ -14,13 +15,15 @@ class MembersController extends Controller
 
     public function index(Clan $clan)
     {
+        $auth_member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
         $members = Member::where('clan_id', $clan->id)->get();
-        return view('members.index', compact('members', 'clan'));
+        return view('members.index', compact('members', 'clan', 'auth_member'));
     }
 
     public function create(Clan $clan)
     {
-        return view('members.create', compact('clan'));
+        $auth_member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
+        return view('members.create', compact('clan', 'auth_member'));
     }
 
     public function store(Request $request, Clan $clan)
@@ -33,6 +36,8 @@ class MembersController extends Controller
             'nickname' => $validated['nickname'],
             'rank' => 'Мембер'
             ]);
+
+        $member->assignRole('Candidate');
 
         return redirect()->back();
     }
@@ -69,6 +74,8 @@ class MembersController extends Controller
                 'user_id' => Auth::id(),
                 'rank' => 'Мастер'
             ]);
+
+            $member->assignRole('Master');
             $validated['status'] = 'main';
             $validated['character_type_id'] = $request->character_type;
             $validated['link'] = $request->link;
@@ -83,6 +90,8 @@ class MembersController extends Controller
     public function getInvitedUserData($token)
     {
         $clan = Clan::where('invite_link', $token)->firstOrFail();
-        return redirect()->route('clan.characters.create', $clan)->with('message', 'Для продолжения создайте персонажа');
+        $characters_type = CharactersType::all();
+        return view('middleware.no_characters', compact('clan', 'characters_type'));
     }
+
 }

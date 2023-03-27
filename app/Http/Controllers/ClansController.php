@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CharactersType;
 use App\Models\Clan;
+use App\Models\Member;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -13,6 +15,7 @@ class ClansController extends Controller
     {
         $this->middleware('clan', ['except' => ['index', 'create', 'store']]);
         $this->middleware('checkCharacter', ['only' => ['show']]);
+        $this->middleware('checkRole', ['except' => ['index']]);
     }
 
     public function index()
@@ -39,8 +42,8 @@ class ClansController extends Controller
 
     public function show(Clan $clan)
     {
-        return redirect()->route('events', $clan);
-//        return view('clans.show', compact('clan'));
+        $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
+        return redirect()->route('events', compact('clan', 'member'));
     }
 
     public function edit(Clan $clan)

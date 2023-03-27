@@ -5,6 +5,7 @@
         @endif>
         Мемберы
     </a>
+
     <a href="{{ route('events', $clan) }}"
        @if(request()->routeIs(['event.*', 'events']))
            class="border-b-2 border-indigo-500"
@@ -24,5 +25,8 @@
        @if(request()->routeIs(['clan.activity.*']))
         class="border-b-2 border-indigo-500"
         @endif>Активность</a>
-{{--    <a href="">Управление</a>--}}
+
+    @if($member->hasRole('Master'))
+        <a href="">Управление</a>
+    @endif
 </h2>

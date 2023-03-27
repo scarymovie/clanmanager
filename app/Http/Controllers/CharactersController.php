@@ -40,7 +40,15 @@ class CharactersController extends Controller
     {
         try {
             $validated = $characterStoreRequest->validated();
-            $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
+
+            $member = Member::create([
+                'clan_id' => $clan->id,
+                'user_id' => Auth::id(),
+                'rank' => 'Мембер'
+            ]);
+
+            $member->assignRole('Candidate');
+
             $characterService->checkIfMainExists($validated['status'], $member);
 
             $character = $characterService->createCharacter($validated, $member);
@@ -48,7 +56,7 @@ class CharactersController extends Controller
             return redirect()->back()->withErrors($exception->getMessage());
         }
 
-        return redirect()->back()->with('message', 'Успешно');
+        return response()->view('middleware.wait_approve', compact('clan'));
     }
 
     public function show(Character $character)

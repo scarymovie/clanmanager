@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-clan-menu :clan="$clan"></x-clan-menu>
+        <x-clan-menu :clan="$clan" :member="$member"></x-clan-menu>
     </x-slot>
 
     <div class="py-12">

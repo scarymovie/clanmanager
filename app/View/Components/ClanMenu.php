@@ -2,16 +2,20 @@
 
 namespace App\View\Components;
 
+use App\Models\Clan;
+use App\Models\Member;
 use Illuminate\View\Component;
 
 class ClanMenu extends Component
 {
 
-    public $clan;
+    public Clan $clan;
+    public Member $member;
 
-    public function __construct($clan)
+    public function __construct($clan, $member)
     {
         $this->clan = $clan;
+        $this->member = $member;
     }
 
     /**
