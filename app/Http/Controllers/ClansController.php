@@ -15,7 +15,7 @@ class ClansController extends Controller
     {
         $this->middleware('clan', ['except' => ['index', 'create', 'store']]);
         $this->middleware('checkCharacter', ['only' => ['show']]);
-        $this->middleware('checkRole', ['except' => ['index']]);
+        $this->middleware('checkRole', ['except' => ['index', 'create', 'store']]);
     }
 
     public function index()

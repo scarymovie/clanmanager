@@ -47,9 +47,10 @@ class EventController extends Controller
         return view('events.index', compact(['events', 'clan', 'character', 'weekday', 'diffWeeks', 'member']));
     }
 
-    public function create(Clan $clan)
+    public function create(Clan $clan, Member $member)
     {
-        return view('events.create', compact('clan'));
+//        $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
+        return view('events.create', compact('clan', 'member'));
     }
 
     public function store(Request $request, Clan $clan)

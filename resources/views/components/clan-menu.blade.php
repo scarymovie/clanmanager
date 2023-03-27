@@ -7,7 +7,7 @@
     </a>
 
     <a href="{{ route('events', $clan) }}"
-       @if(request()->routeIs(['event.*', 'events']))
+       @if(request()->routeIs(['event.*', 'events', 'events.*']))
            class="border-b-2 border-indigo-500"
         @endif>Ивенты
     </a>

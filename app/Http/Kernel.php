@@ -2,6 +2,7 @@
 
 namespace App\Http;
 
+use App\Http\Middleware\ClanRole;
 use App\Http\Middleware\NotCandidate;
 use App\Http\Middleware\RedirectToCharacters;
 use App\Http\Middleware\UserAttachedCurrentClan;
@@ -74,5 +75,6 @@ class Kernel extends HttpKernel
         'clan' => UserAttachedCurrentClan::class,
         'checkCharacter' => RedirectToCharacters::class,
         'checkRole' => NotCandidate::class,
+        'clanRole' => ClanRole::class,
     ];
 }
