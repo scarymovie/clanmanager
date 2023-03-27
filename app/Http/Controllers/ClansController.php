@@ -39,7 +39,7 @@ class ClansController extends Controller
 
     public function show(Clan $clan)
     {
-        $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
+        $member = $clan->members->firstWhere('user_id', Auth::id());
         return view('clans.show', compact(['clan', 'member']));
     }
 
@@ -60,8 +60,7 @@ class ClansController extends Controller
 
     public function setNewInviteLink(Clan $clan)
     {
-        $newLink = Str::random(32);
-        $clan->update(['invite_link' => $newLink]);
+        $clan->update(['invite_link' => Str::random(32)]);
         return redirect()->back();
     }
 

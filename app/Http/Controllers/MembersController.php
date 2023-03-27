@@ -13,18 +13,16 @@ use Illuminate\Support\Facades\Auth;
 
 class MembersController extends Controller
 {
-
     public function index(Clan $clan)
     {
-
-        $auth_member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
-        $members = Member::where('clan_id', $clan->id)->get();
-        return view('members.index', compact('members', 'clan', 'auth_member'));
+        $members = $clan->members;
+        $auth_member = $members->firstWhere('user_id', Auth::id());
+        return view('members.index', compact('clan', 'members', 'auth_member'));
     }
 
     public function create(Clan $clan)
     {
-        $auth_member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
+        $auth_member = $clan->members->firstWhere('user_id', Auth::id());
         return view('members.create', compact('clan', 'auth_member'));
     }
 
@@ -67,19 +65,15 @@ class MembersController extends Controller
 
     public function createMaster(CreateMemberMasterRequest $createMemberMasterRequest, Clan $clan, CharacterService $characterService)
     {
-        $validated = $createMemberMasterRequest->validated();
-        $validated['clan_id'] = $clan->id;
-
         if (Member::checkIfMasterNotExist($clan)){
-
             $member = Member::create([
-                'clan_id' => $validated['clan_id'],
+                'clan_id' => $clan->id,
                 'user_id' => Auth::id(),
                 'rank' => 'Мастер'
             ]);
-
             $member->assignRole('Master');
 
+            $validated = $createMemberMasterRequest->validated();
             $validated['status'] = Member::MAIN;
             $validated['character_type_id'] = $validated['character_type'];
 
@@ -93,7 +87,7 @@ class MembersController extends Controller
 
     public function getInvitedUserData($token)
     {
-        $clan = Clan::where('invite_link', $token)->firstOrFail();
+        $clan = Clan::firstWhere('invite_link', $token);
         $characters_type = CharactersType::all();
         return view('middleware.no_characters', compact('clan', 'characters_type'));
     }
