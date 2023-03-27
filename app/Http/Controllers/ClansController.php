@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ClansStoreRequest;
 use App\Models\CharactersType;
 use App\Models\Clan;
 use App\Models\Member;
@@ -11,12 +12,6 @@ use Illuminate\Support\Str;
 
 class ClansController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('clan', ['except' => ['index', 'create', 'store']]);
-        $this->middleware('checkCharacter', ['only' => ['show']]);
-        $this->middleware('checkRole', ['except' => ['index', 'create', 'store']]);
-    }
 
     public function index()
     {
@@ -29,21 +24,23 @@ class ClansController extends Controller
         return view('clans.create');
     }
 
-    public function store(Request $request)
+    public function store(ClansStoreRequest $clansStoreRequest)
     {
-        $title = $request->title;
+        $validated = $clansStoreRequest->validated();
+
         $clan = Clan::create([
             'user_id' => Auth::id(),
-            'title' => $title,
+            'title' => $validated['title'],
             'invite_link' => Str::random(32)
         ]);
-        return redirect()->route('clan.show', compact('clan'));
+
+        return redirect()->route('clans.show', compact('clan'));
     }
 
     public function show(Clan $clan)
     {
         $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
-        return redirect()->route('events', compact('clan', 'member'));
+        return view('clans.show', compact(['clan', 'member']));
     }
 
     public function edit(Clan $clan)

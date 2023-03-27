@@ -6,7 +6,7 @@
     @if($auth_member->hasRole('Master'))
         <ul class="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
             <li class="w-full">
-                <a href="{{ route('members', $clan) }}"
+                <a href="{{ route('members.index', $clan) }}"
                    class="@if(request()->routeIs('members')) text-gray-900 bg-gray-100 @else bg-white @endif inline-block w-full p-4 rounded-l-lg focus:ring-4 focus:ring-blue-300 focus:outline-none
                    dark:bg-gray-700 dark:text-white" aria-current="page">Все мемберы</a>
             </li>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateMemberMasterRequest;
 use App\Models\Character;
 use App\Models\CharactersType;
 use App\Models\Clan;
@@ -15,6 +16,7 @@ class MembersController extends Controller
 
     public function index(Clan $clan)
     {
+
         $auth_member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
         $members = Member::where('clan_id', $clan->id)->get();
         return view('members.index', compact('members', 'clan', 'auth_member'));
@@ -63,12 +65,13 @@ class MembersController extends Controller
         return redirect()->back();
     }
 
-    public function createMaster(Request $request, Clan $clan, CharacterService $characterService)
+    public function createMaster(CreateMemberMasterRequest $createMemberMasterRequest, Clan $clan, CharacterService $characterService)
     {
-        $validated = $request->all();
+        $validated = $createMemberMasterRequest->validated();
         $validated['clan_id'] = $clan->id;
 
         if (Member::checkIfMasterNotExist($clan)){
+
             $member = Member::create([
                 'clan_id' => $validated['clan_id'],
                 'user_id' => Auth::id(),
@@ -76,15 +79,16 @@ class MembersController extends Controller
             ]);
 
             $member->assignRole('Master');
-            $validated['status'] = 'main';
-            $validated['character_type_id'] = $request->character_type;
-            $validated['link'] = $request->link;
+
+            $validated['status'] = Member::MAIN;
+            $validated['character_type_id'] = $validated['character_type'];
+
             $characterService->checkIfMainExists($validated['status'], $member);
 
             $character = $characterService->createCharacter($validated, $member);
         }
 
-        return redirect()->route('members', compact('clan'));
+        return redirect()->route('members.index', compact('clan'));
     }
 
     public function getInvitedUserData($token)

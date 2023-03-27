@@ -8,7 +8,7 @@
             </div>
             <div>
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    <a href="{{ route('clan.create') }}">Создать клан</a>
+                    <a href="{{ route('clans.create') }}">Создать клан</a>
                 </h2>
             </div>
         </div>

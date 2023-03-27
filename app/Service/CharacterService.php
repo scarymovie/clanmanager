@@ -9,13 +9,8 @@ class CharacterService
 {
     public function checkIfMainExists(string $status, Member $member)
     {
-        if ($status === 'main'){
-
-            foreach ($member->characters as $character){
-                if ($character->status === 'main'){
-                    throw new \Exception('Вы уже создали основу');
-                }
-            }
+        if ($status === Member::MAIN && $member->characters->contains('status', Member::MAIN)) {
+            throw new \Exception('Вы уже создали основу');
         }
 
         return true;

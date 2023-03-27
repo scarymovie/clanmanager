@@ -11,6 +11,8 @@ class Member extends Model
     use HasFactory;
     use HasRoles;
 
+    const MAIN = 'main';
+
     protected $fillable = [
         'user_id',
         'clan_id',
@@ -32,7 +34,11 @@ class Member extends Model
 
     public static function checkIfMasterNotExist(Clan $clan)
     {
-        if ($clan->members()->where('rank', 'Мастер')->exists()){
+        $master = $clan->members()->whereHas('roles', function ($query) {
+            $query->where('name', 'Master');
+        })->first();
+
+        if ($master){
             throw new \Exception('Мастер уже существует');
         }
 
