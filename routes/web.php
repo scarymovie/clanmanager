@@ -53,17 +53,36 @@ Route::middleware(['auth'])->group(function (){
 
             Route::get('/clan/{clan}/members', [MembersController::class, 'index'])
                 ->name('members.index');
+
+            Route::get('/clan/{clan}/events', [EventController::class, 'index'])
+                ->name('events.index');
+
+            Route::get('/clan/{clan}/events/{event}/{difference}', [EventController::class, 'show'])
+                ->name('events.show');
+
+            Route::get('/clan/{clan}/events_status/{event}/{difference}', [EventController::class, 'eventStatus'])
+                ->name('events.status');
+
+            Route::get('/clan/{clan}/event_details', [EventController::class, 'showDetails'])
+                ->name('events.show_details');
+
+            // Доступно только для мастера клана или других ролей, которые будут добавлены позже
+            Route::middleware('checkRole:Master')->group(function (){
+
+                Route::get('/clan/{clan}/members/{member}/create', [MembersController::class, 'create'])
+                    ->name('members.create');
+
+                Route::get('/clan/{clan}/events/create', [EventController::class, 'create'])
+                    ->name('events.create');
+
+                Route::post('/clan/{clan}/events', [EventController::class, 'store'])
+                    ->name('events.store');
+
+                Route::get('clan/{clan}/link/refresh', [ClansController::class, 'setNewInviteLink'])
+                    ->name('refresh_invite_link');
+            });
         });
 
-        // Доступно только для мастера клана или других ролей, которые будут добавлены позже
-        Route::middleware('checkRole:Master')->group(function (){
-
-            Route::get('/clan/{clan}/members/{member}/create', [MembersController::class, 'create'])
-                ->name('members.create');
-
-            Route::get('clan/{clan}/link/refresh', [ClansController::class, 'setNewInviteLink'])
-                ->name('refresh_invite_link');
-        });
     });
 });
 

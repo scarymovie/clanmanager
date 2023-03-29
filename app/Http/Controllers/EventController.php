@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\EventRequest;
 use App\Models\Clan;
 use App\Models\Event;
 use App\Models\EventMemberStatus;
@@ -9,14 +10,10 @@ use App\Models\Member;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\ValidationException;
 
 class EventController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('checkCharacter');
-    }
-
     public function index(Request $request, Clan $clan)
     {
         $week = $request->date;
@@ -44,37 +41,36 @@ class EventController extends Controller
 
         $character = $member->characters->where('status', 'main')->first();
 
-        return view('events.index', compact(['events', 'clan', 'character', 'weekday', 'diffWeeks', 'member']));
+        return view('events.index', compact(['events', 'clan', 'character', 'weekday', 'diffWeeks', 'member', 'week']));
     }
 
-    public function create(Clan $clan, Member $member)
+    public function create(Clan $clan)
     {
-//        $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
+        $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
         return view('events.create', compact('clan', 'member'));
     }
 
-    public function store(Request $request, Clan $clan)
+    public function store(EventRequest $eventRequest, Clan $clan)
     {
-        $validated = $request->all();
-        unset($validated['_token']);
-        // TODO сделать formrequest и добавить поинты
+        $validated = $eventRequest->validated();
+
         $event = Event::create([
             'title' => $validated['title'],
             'start_date' => $validated['date'],
             'clan_id' => $clan->id,
             'points' => $validated['points'],
         ]);
-        return redirect()->route('events', compact('clan'));
+
+        return redirect()->route('events.index', compact('clan'));
     }
 
-    public function show(Request $request, Clan $clan, Event $event)
+    public function show(Request $request, Clan $clan, Event $event, $difference)
     {
-        $difference = $request->difference;
         $dayName = Carbon::parse($event->start_date)->locale('ru_RU')->dayName;
         $event['week_day'] = mb_convert_case($dayName, MB_CASE_TITLE, "UTF-8");
-        $member = Member::where('user_id', Auth::id())->with('characters', 'characters.type')->first();
+        $member = Member::where('user_id', Auth::id())->where('clan_id', $clan->id)->with('characters', 'characters.type')->first();
         $characters = $member->characters;
-        return view('events.show', compact(['event', 'clan', 'characters', 'difference']));
+        return view('events.show', compact(['event', 'clan', 'characters', 'difference', 'member']));
     }
 
     public function showDetails(Request $request, Clan $clan)
@@ -99,9 +95,8 @@ class EventController extends Controller
         //
     }
 
-    public function eventStatus(Request $request, Clan $clan, Event $event)
+    public function eventStatus(Request $request, Clan $clan, Event $event, $difference)
     {
-        $difference = $request->difference;
         $event_day = Carbon::parse($event->start_date);
 
         $currentEvent = Carbon::parse()->diffInWeeks($event_day);
@@ -131,6 +126,6 @@ class EventController extends Controller
             ]
         );
 //        dd($eventMember);
-        return redirect()->route('events', $clan);
+        return redirect()->route('events.index', $clan);
     }
 }

@@ -4,18 +4,24 @@
     </x-slot>
 
     @if($member->hasRole('Master'))
-        <ul class="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400">
+        <ul class="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400 border-2">
             <li class="w-full">
-                <a href="{{ route('events', $clan) }}"
-                   class="@if(request()->routeIs('events')) text-gray-900 bg-gray-100 @else bg-white @endif inline-block w-full p-4 rounded-l-lg focus:ring-4 focus:ring-blue-300 focus:outline-none
+                <a href="{{ route('events.index', $clan) }}"
+                   class="@if(request()->routeIs('events.index')) text-gray-900 bg-gray-100 @else bg-white @endif inline-block w-full p-4 rounded-l-lg focus:ring-4 focus:ring-blue-300 focus:outline-none
                    dark:bg-gray-700 dark:text-white" aria-current="page">Все ивенты</a>
             </li>
             <li class="w-full">
-                <a href="{{ route('events.create', [$clan, $member]) }}"
+                <a href="{{ route('events.create', [$clan]) }}"
                    class="@if(request()->routeIs('events.create'))text-gray-900 bg-gray-100 @else bg-white @endif inline-block w-full p-4 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none
                    dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">Создать ивент</a>
             </li>
         </ul>
+    @endif
+
+    @if ($errors->any())
+        @foreach ($errors->all() as $error)
+            <div>{{$error}}</div>
+        @endforeach
     @endif
 
     <div class="py-12">
@@ -25,7 +31,7 @@
 
                 <h5 class="eventFullTitle ml-8 mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">Создать новый ивент</h5>
 
-                <form action="{{ route('events.store', [$clan]) }}" method="post">
+                <form action="{{ route('events.store', $clan) }}" method="post">
                     @csrf
                     <div>
                         <label for="title" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Название</label>
