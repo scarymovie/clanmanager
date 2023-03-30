@@ -12,10 +12,6 @@ use Illuminate\Support\Facades\Auth;
 
 class GuildWarsController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('checkCharacter');
-    }
 
     public function index(Request $request, Clan $clan)
     {

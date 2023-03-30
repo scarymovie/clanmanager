@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-clan-menu :clan="$clan"></x-clan-menu>
+        <x-clan-menu :clan="$clan" :member="$member"></x-clan-menu>
     </x-slot>
     <div class="py-12">
         <div class="max-w-4xl mx-auto sm:px-6 lg:px-8">
@@ -22,7 +22,7 @@
                                 Профа
                             </th>
                             <th class="unset">
-                                <a href="{{ route('clan.characters.create', $clan) }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Добавить
+                                <a href="{{ route('characters.create', $clan) }}" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 mr-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800">Добавить
                                 </a>
                             </th>
                         </tr>
@@ -44,11 +44,11 @@
                                     {{ $character->type->title }}
                                 </td>
                                 <td class="pt-2" style="display: flex">
-                                    <a href="{{ route('clan.characters.edit', [$clan, 'character' => $character->id]) }}"
+                                    <a href="{{ route('characters.edit', [$clan, $character]) }}"
                                             class="mr-2 text-white bg-purple-700 hover:bg-purple-800 focus:outline-none focus:ring-4
                                             focus:ring-purple-300 font-medium rounded-full text-sm px-5 py-2.5 text-center mb-2
                                             dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">Изменить</a>
-                                        <form action="{{ route('character.delete', [$clan, $character->id]) }}" method="post">
+                                        <form action="{{ route('characters.delete', [$clan, $character->id]) }}" method="post">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium

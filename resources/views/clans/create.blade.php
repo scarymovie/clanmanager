@@ -3,12 +3,12 @@
         <div>
             <div>
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    <a href="{{ route('clan.index') }}">Найти клан</a>
+                    <a href="{{ route('clans.index') }}">Найти клан</a>
                 </h2>
             </div>
             <div>
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                    <a href="{{ route('clan.create') }}">Создать клан</a>
+                    <a href="{{ route('clans.create') }}">Создать клан</a>
                 </h2>
             </div>
         </div>
@@ -25,7 +25,7 @@
                             </h2>
                         </header>
 
-                        <form method="post" action="{{ route('clan.store') }}" class="mt-6 space-y-6">
+                        <form method="post" action="{{ route('clans.store') }}" class="mt-6 space-y-6">
                             @csrf
                             <div>
                                 <label class="block font-medium text-sm text-gray-700" for="name">

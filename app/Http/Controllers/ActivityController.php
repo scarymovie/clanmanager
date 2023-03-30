@@ -12,15 +12,21 @@ use App\Models\GuildWarsMemberStatus;
 use App\Models\Member;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class AcitivityController extends Controller
+class ActivityController extends Controller
 {
     public function index(Clan $clan)
     {
+        $auth_member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
+
         $month_start = Carbon::now()->startOfMonth();
         $month_end = Carbon::now()->endOfMonth();
 
-        $members = $clan->members;
+        $members = $clan->members()->with('characters')->whereHas('characters', function ($query) {
+            $query->where('status', 'main');
+        })->get();
+
         $membersIds = $members->pluck('id');
         $characters_types = CharactersType::all();
 
@@ -67,7 +73,7 @@ class AcitivityController extends Controller
         $acivity_events = $events_confirmed->merge($gvgs_confirmed)->count();
 
         return view('activity.index', compact(['clan', 'members', 'characters_types', 'activity_percent',
-            'acivity_events', 'events_all', 'eventsList', 'pointsOfConfirmedEvents', 'gvgList']));
+            'acivity_events', 'events_all', 'eventsList', 'pointsOfConfirmedEvents', 'gvgList', 'auth_member']));
     }
 
 
