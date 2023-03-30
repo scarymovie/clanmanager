@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-clan-menu :clan="$clan"></x-clan-menu>
+        <x-clan-menu :clan="$clan" :member="$auth_member"></x-clan-menu>
     </x-slot>
     <div class="py-12">
         <div class="max-w-max mx-auto sm:px-6 lg:px-8">
@@ -36,48 +36,51 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
-                                @foreach($members as $member)
-                                    <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
-                                        @foreach($member->characters as $character)
-                                            @if($character->status === 'main')
-                                                <strong>{{ $character->nickname }}<br></strong>
+                            @foreach($members as $member)
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+
+                                    @if(!$member->hasRole('Candidate'))
+                                        <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                                            @foreach($member->characters as $character)
+                                                @if($character->status === 'main')
+                                                    <strong>{{ $character->nickname }}<br></strong>
+                                                @endif
+                                            @endforeach
+                                        </th>
+                                        <td class="px-6 py-4">
+                                            {{ $activity_percent }}%
+                                        </td>
+                                        <td class="px-6 py-4">
+                                            {{ $events_all }}
+                                        </td>
+                                        @foreach($eventsList as $event)
+                                            @if($event->status != null && $event->status->status === 'confirmed')
+                                                <td class="px-6 py-4 text-green-600">
+                                                    {{ $event->points }}
+                                                </td>
+                                            @else
+                                                <td class="px-6 py-4 text-red-600">
+                                                    0
+                                                </td>
                                             @endif
                                         @endforeach
-                                    </th>
-                                    <td class="px-6 py-4">
-                                        {{ $activity_percent }}%
-                                    </td>
-                                    <td class="px-6 py-4">
-                                        {{ $events_all }}
-                                    </td>
-                                    @foreach($eventsList as $event)
-                                        @if($event->status != null && $event->status->status === 'confirmed')
-                                            <td class="px-6 py-4 text-green-600">
-                                                {{ $event->points }}
-                                            </td>
-                                        @else
-                                            <td class="px-6 py-4 text-red-600">
-                                                0
-                                            </td>
-                                        @endif
-                                    @endforeach
-                                @foreach($gvgList as $gvg)
-                                        @if($gvg->status != null && $gvg->status->title === 'confirmed')
-                                            <td class="px-6 py-4 text-green-600">
-                                                {{ $gvg->points }}
-                                            </td>
-                                        @else
-                                            <td class="px-6 py-4 text-red-600">
-                                                0
-                                            </td>
-                                        @endif
-                                @endforeach
-                                    <td class="px-6 py-4 text-black-600">
-                                        <strong><b>{{ $pointsOfConfirmedEvents }}</b></strong>
-                                    </td>
-                                @endforeach
-                            </tr>
+                                        @foreach($gvgList as $gvg)
+                                            @if($gvg->status != null && $gvg->status->title === 'confirmed')
+                                                <td class="px-6 py-4 text-green-600">
+                                                    {{ $gvg->points }}
+                                                </td>
+                                            @else
+                                                <td class="px-6 py-4 text-red-600">
+                                                    0
+                                                </td>
+                                            @endif
+                                        @endforeach
+                                        <td class="px-6 py-4 text-black-600">
+                                            <strong><b>{{ $pointsOfConfirmedEvents }}</b></strong>
+                                        </td>
+                                    @endif
+                                </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>

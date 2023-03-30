@@ -32,10 +32,10 @@
                         </a>
                 </li>
                 <li>
-                    {{--    <a href="{{ route('clan.activity.index', $clan) }}"--}}
-                    {{--       @if(request()->routeIs(['clan.activity.*']))--}}
-                    {{--        class="border-b-2 border-indigo-500"--}}
-                    {{--        @endif>Активность</a>--}}
+                        <a href="{{ route('activity.index', $clan) }}"
+                           @if(request()->routeIs(['activity.*']))
+                            class="border-b-2 border-indigo-500"
+                            @endif>Активность</a>
                 </li>
             </ul>
         </div>

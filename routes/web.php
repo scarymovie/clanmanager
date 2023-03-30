@@ -1,13 +1,12 @@
 <?php
 
-use App\Http\Controllers\AcitivityController;
+use App\Http\Controllers\ActivityController;
 use App\Http\Controllers\CharactersController;
 use App\Http\Controllers\ClansController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\GuildWarsController;
 use App\Http\Controllers\MembersController;
 use App\Http\Controllers\ProfilesController;
-use App\Http\Controllers\User\AjaxController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -99,6 +98,10 @@ Route::middleware(['auth'])->group(function (){
 
             Route::delete('clan/{clan}/characters/{character}', [CharactersController::class, 'destroy'])
                 ->name('characters.delete');
+
+            Route::get('/clan/{clan}/activity', [ActivityController::class, 'index'])
+                ->name('activity.index');
+
 
             // Доступно только для мастера клана или других ролей, которые будут добавлены позже
             Route::middleware('checkRole:Master')->group(function (){
