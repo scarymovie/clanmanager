@@ -10,12 +10,21 @@ use App\Models\member;
 use App\Service\CharacterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MembersController extends Controller
 {
     public function index(Clan $clan)
     {
-        $members = $clan->members;
+        $members = $clan->members()
+            ->with(['characters', 'roles'])
+            ->whereHas('characters', function ($query) {
+                $query->where('status', 'main');
+            })
+            ->whereHas("roles", function ($query) {
+                $query->whereIn("name", ["Master", "Member"]);
+            })->get();
+
         $auth_member = $members->firstWhere('user_id', Auth::id());
 
         return view('members.index', compact('clan', 'members', 'auth_member'));
@@ -23,8 +32,14 @@ class MembersController extends Controller
 
     public function create(Clan $clan)
     {
+        $members = $clan->members()
+            ->with(['characters', 'roles'])
+            ->whereHas("roles", function ($query) {
+                $query->whereIn("name", ["Candidate"]);
+            })->get();
+
         $auth_member = $clan->members->firstWhere('user_id', Auth::id());
-        return view('members.create', compact('clan', 'auth_member'));
+        return view('members.create', compact('clan', 'auth_member', 'members'));
     }
 
     public function store(Request $request, Clan $clan)
@@ -36,7 +51,7 @@ class MembersController extends Controller
             'user_id' => Auth::id(),
             'nickname' => $validated['nickname'],
             'rank' => 'Мембер'
-            ]);
+        ]);
 
         $member->assignRole('Candidate');
 
@@ -66,7 +81,7 @@ class MembersController extends Controller
 
     public function createMaster(CreateMemberMasterRequest $createMemberMasterRequest, Clan $clan, CharacterService $characterService)
     {
-        if (Member::checkIfMasterNotExist($clan)){
+        if (Member::checkIfMasterNotExist($clan)) {
             $member = Member::create([
                 'clan_id' => $clan->id,
                 'user_id' => Auth::id(),
@@ -89,11 +104,24 @@ class MembersController extends Controller
     public function getInvitedUserData(Clan $clan, $token)
     {
         $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
-        if ($member){
+        if ($member) {
             return view('middleware.wait_approve');
         } else {
             $characters_type = CharactersType::all();
             return view('middleware.candidate', compact('clan', 'characters_type'));
         }
+    }
+
+    public function changeCandidateStatus(Request $request, Clan $clan, Member $member)
+    {
+        $decision = $request->decision;
+        if ($decision === 'accept'){
+            $member->syncRoles([]);
+            $member->assignRole('Member');
+        } elseif ($decision === 'decline'){
+            $member->syncRoles([]);
+            $member->assignRole('Rejected');
+        }
+        return redirect()->back();
     }
 }

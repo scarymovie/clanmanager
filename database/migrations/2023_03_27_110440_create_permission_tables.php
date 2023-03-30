@@ -127,6 +127,9 @@ class CreatePermissionTables extends Migration
         Artisan::call(
             'permission:create-role Member'
         );
+        Artisan::call(
+            'permission:create-role Rejected'
+        );
     }
 
     /**

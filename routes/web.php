@@ -117,6 +117,9 @@ Route::middleware(['auth'])->group(function (){
 
                 Route::get('clan/{clan}/link/refresh', [ClansController::class, 'setNewInviteLink'])
                     ->name('refresh_invite_link');
+
+                Route::get('/clan/{clan}/{member}', [MembersController::class, 'changeCandidateStatus'])
+                    ->name('candidate.status');
             });
         });
 

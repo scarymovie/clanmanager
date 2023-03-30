@@ -23,7 +23,10 @@ class ActivityController extends Controller
         $month_start = Carbon::now()->startOfMonth();
         $month_end = Carbon::now()->endOfMonth();
 
-        $members = $clan->members()->with('characters')->get();
+        $members = $clan->members()->with('characters')->whereHas('characters', function ($query) {
+            $query->where('status', 'main');
+        })->get();
+
         $membersIds = $members->pluck('id');
         $characters_types = CharactersType::all();
 
