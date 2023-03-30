@@ -37,13 +37,20 @@ Route::middleware(['auth'])->group(function (){
     Route::post('/clan/store', [ClansController::class, 'store'])
         ->name('clans.store');
 
-    Route::get('invited/{token}', [MembersController::class, 'getInvitedUserData'])->name('invited_user');
+    Route::get('/clan/{clan}/invited/{token}', [MembersController::class, 'getInvitedUserData'])
+        ->name('invited_user');
+
+    Route::post('/clan/{clan}/characters_newbie', [CharactersController::class, 'createNewbie'])
+        ->name('characters.newbie.store');
 
     // Проверка на принадлежность к клану
     Route::middleware('clan')->group(function (){
 
         Route::post('/clan/{clan}/master', [MembersController::class, 'createMaster'])
             ->name('master.create');
+
+        Route::post('clan/{clan}/characters/{member}', [CharactersController::class, 'store'])
+            ->name('characters.store');
 
         // Проверка на наличие персонажа в клане, не является кандидатом в клан
         Route::middleware(['checkCharacter', 'checkRole'])->group(function (){
@@ -65,6 +72,33 @@ Route::middleware(['auth'])->group(function (){
 
             Route::get('/clan/{clan}/event_details', [EventController::class, 'showDetails'])
                 ->name('events.show_details');
+
+            Route::get('/clan/{clan}/gvg', [GuildWarsController::class, 'index'])
+                ->name('gvg.index');
+
+            Route::get('/clan/{clan}/gvg_details', [GuildWarsController::class, 'showDetails'])
+                ->name('gvg.show_details');
+
+            Route::get('clan/{clan}/gvg/{guildWar}/status', [GuildWarsController::class, 'gvgStatus'])
+                ->name('gvg.status');
+
+            Route::get('clan/{clan}/gvg/{guildWar}/show', [GuildWarsController::class, 'show'])
+                ->name('gvg.show');
+
+            Route::get('clan/{clan}/characters', [CharactersController::class, 'index'])
+                ->name('characters.index');
+
+            Route::get('clan/{clan}/characters/create', [CharactersController::class, 'create'])
+                ->name('characters.create');
+
+            Route::get('clan/{clan}/characters/{character}/edit', [CharactersController::class, 'edit'])
+                ->name('characters.edit');
+
+            Route::put('clan/{clan}/characters/{character}', [CharactersController::class, 'update'])
+                ->name('characters.update');
+
+            Route::delete('clan/{clan}/characters/{character}', [CharactersController::class, 'destroy'])
+                ->name('characters.delete');
 
             // Доступно только для мастера клана или других ролей, которые будут добавлены позже
             Route::middleware('checkRole:Master')->group(function (){

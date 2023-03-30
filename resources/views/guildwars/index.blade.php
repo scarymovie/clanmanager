@@ -1,21 +1,12 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-clan-menu :clan="$clan"></x-clan-menu>
+        <x-clan-menu :clan="$clan" :member="$member"></x-clan-menu>
     </x-slot>
 {{--@dd($guildWars)--}}
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
-                @if(!$character)
-                    <h1>
-                        <b>Вам требуется создать персонажа для просмотра ивентов</b>
-                        <br>
-                        Создать персонажа можно
-                        <a href="{{ route('clan.characters.create', $clan) }}">здесь</a>
-                    </h1>
-                @else
-
-                    <div style="position: sticky; top: 2%;"
+                <div style="position: sticky; top: 2%;"
                          class="eventFull hidden float-right min-w-[66%] max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
 
 
@@ -38,7 +29,7 @@
                                class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Ваш персонаж по умолчанию(основа)</label>
                         <input disabled id="first_name" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500
                     block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="{{ $character->nickname }} {{ $character->type->title }}">
-                        <h6>Изменить можно <a href="{{ route('clan.characters.create', $clan) }}">здесь</a></h6>
+{{--                        <h6>Изменить можно <a href="{{ route('clan.characters.create', $clan) }}">здесь</a></h6>--}}
                     </div>
 
                     <div class="relative max-w-sm">
@@ -193,7 +184,6 @@
                             @endif
                         @endif
                     @endforeach
-                @endif
             </div>
         </div>
     </div>

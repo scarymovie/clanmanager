@@ -17,6 +17,7 @@ class MembersController extends Controller
     {
         $members = $clan->members;
         $auth_member = $members->firstWhere('user_id', Auth::id());
+
         return view('members.index', compact('clan', 'members', 'auth_member'));
     }
 
@@ -85,11 +86,14 @@ class MembersController extends Controller
         return redirect()->route('members.index', compact('clan'));
     }
 
-    public function getInvitedUserData($token)
+    public function getInvitedUserData(Clan $clan, $token)
     {
-        $clan = Clan::firstWhere('invite_link', $token);
-        $characters_type = CharactersType::all();
-        return view('middleware.no_characters', compact('clan', 'characters_type'));
+        $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
+        if ($member){
+            return view('middleware.wait_approve');
+        } else {
+            $characters_type = CharactersType::all();
+            return view('middleware.candidate', compact('clan', 'characters_type'));
+        }
     }
-
 }

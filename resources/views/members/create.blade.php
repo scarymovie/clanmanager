@@ -34,7 +34,7 @@
                             <button id="copy-button" class="bg-blue-500 mr-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Скопировать</button>
                             <a href="{{ route('refresh_invite_link', $clan) }}" id="copy-button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Обновить</a>
                         </div>
-                        <div id="content" data-clipboard-text="{{ route('invited_user', [$clan->invite_link]) }}"></div>
+                        <div id="content" data-clipboard-text="{{ route('invited_user', [$clan, $clan->invite_link]) }}"></div>
                     </section>
                 </div>
             </div>

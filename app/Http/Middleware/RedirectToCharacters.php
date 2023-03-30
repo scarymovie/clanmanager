@@ -14,12 +14,25 @@ class RedirectToCharacters
     public function handle(Request $request, Closure $next)
     {
         $clan = $request->clan;
-
-        if ($clan->members->isEmpty()){
+        if ($clan){
             $characters_type = CharactersType::all();
+            if ($clan->members->isEmpty() && $clan->user_id === Auth::id()){
+                return response()->view('middleware.no_master', compact('clan', 'characters_type'));
+            } elseif ($clan->members->isEmpty() && $clan->user_id !== Auth::id()){
+                return abort(404);
+            }
             $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
-            return response()->view('middleware.no_characters', compact('clan', 'characters_type', 'member'));
+//            dd($member);
+            if ($member){
+                if ($member->characters()->get()->isEmpty() && !$member->hasRole('Candidate')){
+                    return response()->view('middleware.no_characters', compact('clan', 'characters_type', 'member'));
+                }
+            } else {
+                return response()->view('middleware.candidate', compact('clan', 'characters_type'));
+            }
+
         }
+
         return $next($request);
     }
 }

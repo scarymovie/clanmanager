@@ -18,18 +18,18 @@
                     </a>
                 </li>
                 <li>
-                    {{--    <a href="{{ route('clan.gvg.index', $clan) }}"--}}
-                    {{--       @if(request()->routeIs(['clan.gvg.*']))--}}
-                    {{--           class="border-b-2 border-indigo-500"--}}
-                    {{--        @endif>GvG--}}
-                    {{--    </a>--}}
+                    <a href="{{ route('gvg.index', $clan) }}"
+                       @if(request()->routeIs(['gvg.*']))
+                           class="border-b-2 border-indigo-500"
+                        @endif>GvG
+                    </a>
                 </li>
                 <li>
-                    {{--    <a href="{{ route('clan.characters.index', $clan) }}"--}}
-                    {{--        @if(request()->routeIs(['clan.characters.*']))--}}
-                    {{--        class="border-b-2 border-indigo-500"--}}
-                    {{--        @endif>Мои персонажи--}}
-                    {{--    </a>--}}
+                        <a href="{{ route('characters.index', $clan) }}"
+                            @if(request()->routeIs(['characters.*']))
+                            class="border-b-2 border-indigo-500"
+                            @endif>Мои персонажи
+                        </a>
                 </li>
                 <li>
                     {{--    <a href="{{ route('clan.activity.index', $clan) }}"--}}
