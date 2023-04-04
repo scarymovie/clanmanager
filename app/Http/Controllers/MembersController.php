@@ -6,7 +6,7 @@ use App\Http\Requests\CreateMemberMasterRequest;
 use App\Models\Character;
 use App\Models\CharactersType;
 use App\Models\Clan;
-use App\Models\member;
+use App\Models\Member;
 use App\Service\CharacterService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;

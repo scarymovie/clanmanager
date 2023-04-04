@@ -16,10 +16,12 @@
                         {{ __('Кланы') }}
                     </x-nav-link>
                 </div>
-
-                @foreach(Auth::user()->clans as $clan)
+                @php
+                    $clans = \App\Models\Member::where('user_id', Auth::id())->with('clan')->get()->pluck('clan');
+                @endphp
+                @foreach($clans as $clan)
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('clans.show', $clan)" :active="request()->routeIs('clans.*','members', 'members.*', 'events', 'event.*') && !request()->routeIs(['clans.index', 'clans.create']) && request()->clan->id === $clan->id">
+                    <x-nav-link :href="route('clans.show', $clan)" :active="request()->routeIs('clans.*', 'members.*', 'events.*', 'gvg.*', 'characters.*', 'activity.*') && !request()->routeIs(['clans.index', 'clans.create']) && request()->clan->id === $clan->id">
                         {{ $clan->title }}
                     </x-nav-link>
                 </div>

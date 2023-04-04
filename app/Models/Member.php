@@ -44,4 +44,18 @@ class Member extends Model
 
         return true;
     }
+
+    public function attendedEvents($start_date = null, $end_date = null)
+    {
+        $query = $this->belongsToMany(Event::class, 'event_member_statuses')
+            ->where('status', 'confirmed')
+            ->withTimestamps();
+
+        if ($start_date && $end_date) {
+            $query->whereBetween('event_member_statuses.event_date', [ $start_date, $end_date]);
+        }
+
+        return $query;
+    }
+
 }

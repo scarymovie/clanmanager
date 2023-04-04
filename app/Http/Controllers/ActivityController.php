@@ -16,64 +16,37 @@ use Illuminate\Support\Facades\Auth;
 
 class ActivityController extends Controller
 {
-    public function index(Clan $clan)
+    public function index(Request $request, Clan $clan)
     {
         $auth_member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
+        $startDate = Carbon::parse($request->start ?? now()->startOfMonth());
+        $endDate = Carbon::parse($request->end ?? now()->endOfMonth());
 
-        $month_start = Carbon::now()->startOfMonth();
-        $month_end = Carbon::now()->endOfMonth();
+        $members = Member::where('clan_id', $clan->id)->with('characters')->get();
 
-        $members = $clan->members()->with('characters')->whereHas('characters', function ($query) {
-            $query->where('status', 'main');
-        })->get();
-
-        $membersIds = $members->pluck('id');
-        $characters_types = CharactersType::all();
-
-        $eventsList = Event::with('status')->where('clan_id', $clan->id)->get();
+        $events = Event::where('clan_id', $clan->id)->get();
         $gvgList = GuildWars::where('clan_id', $clan->id)->get();
 
-        $pointsOfConfirmedEvents = $eventsList->filter(function ($value, $key){
-                return optional($value->status)->status === 'confirmed';
-            })->sum('points') + GuildWars::where('clan_id', $clan->id)
-                ->whereHas('status', function($query) {
-                    $query->where('title', 'confirmed');
-                })->sum('points');
+        $eventStatistics = [];
+        foreach ($events as $event) {
+            $attendees = EventMemberStatus::where('event_id', $event->id)
+                ->whereBetween('event_date', [$startDate, $endDate])
+                ->get();
 
-        $events_all = $eventsList->count() + $gvgList->count();
-        $gvgs_all = $gvgList->count();
-
-        $events_confirmed = EventMemberStatus::with('character', 'events')
-            ->where('clan_id', $clan->id)
-            ->whereIn('member_id', $membersIds)
-            ->whereBetween('event_date', [$month_start, $month_end])
-            ->where('status', 'confirmed')
-            ->get();
-
-        $gvgs_confirmed = GuildWarsMemberStatus::where('clan_id', $clan->id)
-            ->whereIn('member_id', $membersIds)
-            ->whereBetween('updated_at', [$month_start, $month_end])
-            ->where('title', 'confirmed')
-            ->get();
-
-        $countOfConfirmedEvents = $events_confirmed->count();
-        $countOfConfirmedGvgs = $gvgs_confirmed->count();
-
-        $clan_events = Event::where('clan_id', $clan->id)->count();
-        $clan_gvgs = GuildWars::where('clan_id', $clan->id)->count();
-
-        $activity_percent = 0;
-        if ($clan_events != 0 || $clan_gvgs != 0) {
-            $activity_percent = ($clan_events != 0 && $clan_gvgs != 0) ? round(($countOfConfirmedEvents + $countOfConfirmedGvgs) / ($clan_events + $clan_gvgs) * 100, 2) : 0;
-            $activity_percent = ($clan_events === 0) ? round($countOfConfirmedGvgs / $clan_gvgs * 100) : $activity_percent;
-            $activity_percent = ($clan_gvgs === 0) ? round($countOfConfirmedEvents / $clan_events * 100) : $activity_percent;
+            $eventAttendances = [];
+            foreach ($attendees as $attendee) {
+                $member = Member::find($attendee->member_id);
+                $eventDate = Carbon::parse($attendee->event_date);
+                $dayOfWeek = $eventDate->format('l');
+                $eventAttendances[$member->id] = [
+                    'status' => $attendee->status,
+                    'count' => isset($eventAttendances[$member->id]) ? $eventAttendances[$member->id]['count'] + 1 : 1,
+                ];
+            }
+            $eventStatistics[$event->title] = $eventAttendances;
         }
 
-
-        $acivity_events = $events_confirmed->merge($gvgs_confirmed)->count();
-
-        return view('activity.index', compact(['clan', 'members', 'characters_types', 'activity_percent',
-            'acivity_events', 'events_all', 'eventsList', 'pointsOfConfirmedEvents', 'gvgList', 'auth_member']));
+        return view('activity.index', compact('members', 'eventStatistics', 'gvgList', 'clan', 'auth_member'));
     }
 
 

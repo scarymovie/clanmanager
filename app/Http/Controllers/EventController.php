@@ -17,12 +17,26 @@ class EventController extends Controller
     public function index(Request $request, Clan $clan)
     {
         $week = $request->date;
+        $start_of_week = Carbon::parse($week)->startOf('week');
+        $end_of_week = Carbon::parse($week)->endOfWeek();
 
         $weekday = Carbon::parse($week ?? now())->isoWeekday();
         $diffWeeks = Carbon::now()->diffInWeeks($week, false);
 
-        $events = Event::where('clan_id', $clan->id)->with('status')->get();
+        $events = Event::where('clan_id', $clan->id)
+            ->with(['status' => function ($query) use ($start_of_week, $end_of_week) {
+                $query->whereBetween('event_date', [$start_of_week, $end_of_week]);
+            }])
+//            ->whereHas('status', function ($query) use ($start_of_week, $end_of_week) {
+//                $query->whereBetween('event_date', [$start_of_week, $end_of_week]);
+//            })
+            ->get();
+
+
+//        dd($events);
         $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->with('characters.type')->first();
+//        $events = Event::all();
+        $attendedEvents = $member->attendedEvents($start_of_week, $end_of_week)->pluck('event_id')->toArray();
 
         $events = $events->map(function ($event) use ($member) {
             $eventMemberStatus = EventMemberStatus::query()
@@ -31,7 +45,7 @@ class EventController extends Controller
                 ->where('clan_id', $event->clan_id)
                 ->first();
 
-            $event->status = optional($eventMemberStatus)->status;
+//            $event->status = optional($eventMemberStatus)->status;
             $event->week_day_name = Carbon::parse($event->start_date)->locale('ru_RU')->dayName;
             $event->week_day = Carbon::parse($event->start_date)->isoWeekday();
             $event->time = date('d.m.Y', strtotime($event->start_date));
@@ -41,7 +55,7 @@ class EventController extends Controller
 
         $character = $member->characters->where('status', 'main')->first();
 
-        return view('events.index', compact(['events', 'clan', 'character', 'weekday', 'diffWeeks', 'member', 'week']));
+        return view('events.index', compact(['events', 'clan', 'character', 'weekday', 'diffWeeks', 'member', 'week', 'attendedEvents']));
     }
 
     public function create(Clan $clan)
@@ -105,7 +119,7 @@ class EventController extends Controller
         $validated['event_id'] = $event->id;
         $validated['note'] = $request->note;
         $validated['clan_id'] = $clan->id;
-        $validated['status'] = $request->status;
+        $validated['status'] = $request->status ?? 'confirmed';
 
         $member = Member::where('clan_id', $validated['clan_id'])->where('user_id', Auth::id())->with('characters')->first();
         $validated['character_id'] = $member->characters->where('status', 'main')->first()->id;
@@ -116,11 +130,11 @@ class EventController extends Controller
                 'clan_id' => $validated['clan_id'],
                 'event_id' => $validated['event_id'],
                 'member_id' => $validated['member_id'],
-                'character_id' => $validated['character_id']
+                'character_id' => $validated['character_id'],
+                'event_date' => $event_date,
             ],
             [
                 'status' => $validated['status'],
-                'event_date' => $event_date,
                 'party_leader_id' => '1',
                 'note' => $validated['note']
             ]

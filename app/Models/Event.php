@@ -29,39 +29,14 @@ class Event extends Model
 
     public function status()
     {
-        return $this->hasOne(EventMemberStatus::class);
+        return $this->hasMany(EventMemberStatus::class);
     }
 
-    public function weekday()
+    public function members()
     {
-        return $this->belongsTo(EventTiming::class, 'event_timing_id');
+        return $this->belongsToMany(Member::class, 'event_member_statuses')
+            ->withPivot('status', 'event_date')
+            ->withTimestamps();
     }
 
-//    protected function weekday(): Attribute
-//    {
-//        return Attribute::make(
-//            get: function (string $value) {
-//                return match ($value){
-//                    '1' => 'Понедельник',
-//                    '2' => 'Вторник',
-//                    '3' => 'Среда',
-//                    '4' => 'Четверг',
-//                    '5' => 'Пятница',
-//                    '6' => 'Суббота',
-//                    '7' => 'Воскресенье',
-//                };
-//            },
-//            set: function (string $value) {
-//                return match ($value){
-//                    'Понедельник' =>  '1',
-//                    'Вторник' =>  '2',
-//                    'Среда' =>  '3',
-//                    'Четверг' =>  '4',
-//                    'Пятница' =>  '5',
-//                    'Суббота' =>  '6',
-//                    'Воскресенье' =>  '7',
-//                };
-//            },
-//        );
-//    }
 }

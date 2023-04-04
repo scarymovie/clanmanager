@@ -62,6 +62,7 @@
                         </label>
                     </div>
                 </div>
+
                 @foreach($events as $event)
                     @if(isset($diffWeeks) && $diffWeeks < 0)
                         <div
@@ -74,7 +75,9 @@
                                         <br>{{ date('H:i', strtotime($event->start_date)) }}</p>
                                 </div>
                             </div>
-                            @if($event->status !== 'confirmed')
+                            @if (in_array($event->id, $attendedEvents))
+                                <p>Вы уже отчитались о посещении этого мероприятия</p>
+                            @else
                             <div
                                 class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
                                 <a href="{{ route('events.show', [$clan, $event, $diffWeeks]) }}">
@@ -131,7 +134,9 @@
                                         <br>{{  date('H:i', strtotime($event->start_date)) }}</p>
                                 </div>
                             </div>
-                            @if($event->status !== 'confirmed')
+                            @if (in_array($event->id, $attendedEvents))
+                                <p>Вы уже отчитались о посещении этого мероприятия</p>
+                            @else
                                 <div
                                     class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
                                     <a href="{{ route('events.show', [$clan, $event, $diffWeeks]) }}">
@@ -151,12 +156,16 @@
                                         <br>{{  date('H:i', strtotime($event->start_date)) }}</p>
                                 </div>
                             </div>
+                            @if (in_array($event->id, $attendedEvents))
+                                <p>Вы уже отчитались о посещении этого мероприятия</p>
+                            @else
                             <div
                                 class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
                                 <a href="{{ route('events.show', [$clan, $event, $diffWeeks]) }}">
                                     Отчитаться
                                 </a>
                             </div>
+                            @endif
                         </div>
                     @else
                         @if($event->status === null)

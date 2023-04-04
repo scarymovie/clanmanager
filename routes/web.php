@@ -109,6 +109,9 @@ Route::middleware(['auth'])->group(function (){
                 Route::get('/clan/{clan}/members/{member}/create', [MembersController::class, 'create'])
                     ->name('members.create');
 
+                Route::delete('/clan/{clan}/members/{member}', [MembersController::class, 'destroy'])
+                    ->name('members.delete');
+
                 Route::get('/clan/{clan}/events/create', [EventController::class, 'create'])
                     ->name('events.create');
 

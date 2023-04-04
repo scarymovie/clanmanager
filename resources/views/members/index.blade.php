@@ -56,7 +56,7 @@
                                     {{ $member->rank }}
                                 </td>
                                 <td class="px-12 py-4">
-                                @if(!$auth_member->hasRole('Master'))
+                                @if($auth_member->hasRole('Master'))
                                     <form action="{{ route('members.delete', [$clan, $member]) }}" method="post">
                                         @csrf
                                         @method('DELETE')
