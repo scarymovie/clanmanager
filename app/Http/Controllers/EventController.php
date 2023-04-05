@@ -139,7 +139,7 @@ class EventController extends Controller
                 'note' => $validated['note']
             ]
         );
-//        dd($eventMember);
+
         return redirect()->route('events.index', $clan);
     }
 }

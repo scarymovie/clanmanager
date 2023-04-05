@@ -18,9 +18,11 @@ class ActivityController extends Controller
 {
     public function index(Request $request, Clan $clan)
     {
+        $start = $request->start;
+        $end = $request->end;
         $auth_member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
-        $startDate = Carbon::parse($request->start ?? now()->startOfMonth());
-        $endDate = Carbon::parse($request->end ?? now()->endOfMonth());
+        $startDate = Carbon::parse($start ?? now()->startOfMonth());
+        $endDate = Carbon::parse($end ?? now()->endOfMonth());
 
         $members = Member::where('clan_id', $clan->id)->with('characters')->get();
 
@@ -36,8 +38,6 @@ class ActivityController extends Controller
             $eventAttendances = [];
             foreach ($attendees as $attendee) {
                 $member = Member::find($attendee->member_id);
-                $eventDate = Carbon::parse($attendee->event_date);
-                $dayOfWeek = $eventDate->format('l');
                 $eventAttendances[$member->id] = [
                     'status' => $attendee->status,
                     'count' => isset($eventAttendances[$member->id]) ? $eventAttendances[$member->id]['count'] + 1 : 1,
@@ -46,9 +46,42 @@ class ActivityController extends Controller
             $eventStatistics[$event->title] = $eventAttendances;
         }
 
-        return view('activity.index', compact('members', 'eventStatistics', 'gvgList', 'clan', 'auth_member'));
-    }
+        $memberActivity = [];
+        foreach ($members as $member) {
+            $eventDaysOfWeekCount = 0; // Общее количество ивентов, на которые мембер подтвердил участие
+            $eventMemberStatusCount = EventMemberStatus::where('member_id', $member->id)
+                ->whereBetween('event_date', [$startDate, $endDate])
+                ->count();
 
+            foreach ($eventStatistics as $event) {
+                foreach ($event as $memberId => $attendance) {
+                    if ($memberId == $member->id && $attendance['status'] == 'confirmed') {
+                        $eventDaysOfWeekCount += $attendance['count'];
+                    }
+                }
+            }
+
+            $eventCounts = [];
+            $memberEventCount = 0;
+            foreach ($events as $event) {
+                $dayOfWeek = Carbon::parse($event->start_date)->dayOfWeek;
+                $eventCount = $startDate->diffInDaysFiltered(function (Carbon $date) use ($dayOfWeek) {
+                    return $date->dayOfWeek === $dayOfWeek;
+                }, $endDate);
+                $memberEventCount += $eventCount;
+                $eventCounts[$event->title] = $eventCount;
+            }
+
+            $activityRatio = $eventMemberStatusCount > 0 ? $eventMemberStatusCount / $memberEventCount * 100 : 0;
+
+            $memberActivity[$member->id] = [
+                'member' => $member,
+                'activity_ratio' => round($activityRatio),
+            ];
+        }
+
+        return view('activity.index', compact('members', 'eventStatistics', 'gvgList', 'clan', 'auth_member', 'memberActivity', 'memberEventCount', 'start', 'end'));
+    }
 
     /**
      * Show the form for creating a new resource.
