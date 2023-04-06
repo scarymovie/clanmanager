@@ -16,7 +16,7 @@ class EventController extends Controller
 {
     public function index(Request $request, Clan $clan)
     {
-        $week = $request->date;
+        $week = Carbon::createFromFormat('d.m.Y', $request->date);
         $start_of_week = Carbon::parse($week)->startOf('week');
         $end_of_week = Carbon::parse($week)->endOfWeek();
 
@@ -24,7 +24,7 @@ class EventController extends Controller
         $memberCreatedAt = $member->created_at;
 
         $weekday = Carbon::parse($week ?? now())->isoWeekday();
-        $diffWeeks = Carbon::now()->diffInWeeks($week, false);
+        $diffWeeks = Carbon::now()->startOfWeek()->diffInWeeks($week, false);
 
         $events = Event::where('clan_id', $clan->id)
             ->with(['status' => function ($query) use ($start_of_week, $end_of_week) {
@@ -34,8 +34,8 @@ class EventController extends Controller
 
         $attendedEvents = $member->attendedEvents($start_of_week, $end_of_week)->pluck('event_id')->toArray();
 
-        $events = $events->map(function ($event) use ($memberCreatedAt, $start_of_week, $member, $attendedEvents) {
-            $eventDate = Carbon::parse($event->start_date)->startOfDay();
+        $events = $events->map(function ($event) use ($memberCreatedAt, $start_of_week, $member, $attendedEvents, $diffWeeks) {
+            $eventDate = Carbon::parse($event->start_date)->addWeek($diffWeeks);
 
             // Check if the event happened before the member joined the clan
             if ($eventDate->lt($memberCreatedAt)) {
@@ -68,7 +68,7 @@ class EventController extends Controller
 
             return $event;
         })->sortBy('week_day');
-
+//        dd($events);
         $character = $member->characters->where('status', 'main')->first();
 
         return view('events.index', compact(['events', 'clan', 'character', 'weekday', 'diffWeeks', 'member', 'week', 'attendedEvents']));
