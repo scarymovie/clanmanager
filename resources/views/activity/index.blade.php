@@ -59,6 +59,7 @@
                             </tr>
                             </thead>
                             <tbody>
+
                             @foreach($members as $member)
                                 <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                                     @if(!$member->hasRole('Candidate'))

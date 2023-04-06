@@ -21,8 +21,8 @@ class ActivityController extends Controller
         $start = $request->start;
         $end = $request->end;
         $auth_member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->first();
-        $startDate = Carbon::parse($start ?? now()->startOfMonth());
-        $endDate = Carbon::parse($end ?? now()->endOfMonth());
+        $startDate = $start ? Carbon::parse($start) : Carbon::now()->startOfMonth();
+        $endDate = $end ? Carbon::parse($end) : Carbon::now()->endOfMonth();
 
         $members = Member::where('clan_id', $clan->id)->with('characters')->get();
 
@@ -48,9 +48,9 @@ class ActivityController extends Controller
 
         $memberActivity = [];
         foreach ($members as $member) {
-            $eventDaysOfWeekCount = 0; // Общее количество ивентов, на которые мембер подтвердил участие
+            $eventDaysOfWeekCount = 0;
             $eventMemberStatusCount = EventMemberStatus::where('member_id', $member->id)
-                ->whereBetween('event_date', [$startDate, $endDate])
+                ->whereBetween('event_date', [$member->created_at, $endDate])
                 ->count();
 
             foreach ($eventStatistics as $event) {
@@ -65,7 +65,7 @@ class ActivityController extends Controller
             $memberEventCount = 0;
             foreach ($events as $event) {
                 $dayOfWeek = Carbon::parse($event->start_date)->dayOfWeek;
-                $eventCount = $startDate->diffInDaysFiltered(function (Carbon $date) use ($dayOfWeek) {
+                $eventCount = $member->created_at->diffInDaysFiltered(function (Carbon $date) use ($dayOfWeek) {
                     return $date->dayOfWeek === $dayOfWeek;
                 }, $endDate);
                 $memberEventCount += $eventCount;
@@ -79,7 +79,6 @@ class ActivityController extends Controller
                 'activity_ratio' => round($activityRatio),
             ];
         }
-
         return view('activity.index', compact('members', 'eventStatistics', 'gvgList', 'clan', 'auth_member', 'memberActivity', 'memberEventCount', 'start', 'end'));
     }
 

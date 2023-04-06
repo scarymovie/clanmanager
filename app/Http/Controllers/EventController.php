@@ -20,6 +20,9 @@ class EventController extends Controller
         $start_of_week = Carbon::parse($week)->startOf('week');
         $end_of_week = Carbon::parse($week)->endOfWeek();
 
+        $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->with('characters.type')->first();
+        $memberCreatedAt = $member->created_at;
+
         $weekday = Carbon::parse($week ?? now())->isoWeekday();
         $diffWeeks = Carbon::now()->diffInWeeks($week, false);
 
@@ -27,28 +30,41 @@ class EventController extends Controller
             ->with(['status' => function ($query) use ($start_of_week, $end_of_week) {
                 $query->whereBetween('event_date', [$start_of_week, $end_of_week]);
             }])
-//            ->whereHas('status', function ($query) use ($start_of_week, $end_of_week) {
-//                $query->whereBetween('event_date', [$start_of_week, $end_of_week]);
-//            })
             ->get();
 
-
-//        dd($events);
-        $member = Member::where('clan_id', $clan->id)->where('user_id', Auth::id())->with('characters.type')->first();
-//        $events = Event::all();
         $attendedEvents = $member->attendedEvents($start_of_week, $end_of_week)->pluck('event_id')->toArray();
 
-        $events = $events->map(function ($event) use ($member) {
+        $events = $events->map(function ($event) use ($memberCreatedAt, $start_of_week, $member, $attendedEvents) {
+            $eventDate = Carbon::parse($event->start_date)->startOfDay();
+
+            // Check if the event happened before the member joined the clan
+            if ($eventDate->lt($memberCreatedAt)) {
+                $event->is_hidden = true;
+                return $event;
+            }
+
+            // Calculate the number of weeks between the event date and the start of the week
+            $diffWeeks = $eventDate->diffInWeeks($start_of_week, false);
+
+            // Check if the event happened before the start of the week
+            if ($diffWeeks < 0) {
+                $event->is_hidden = true;
+                return $event;
+            }
+
             $eventMemberStatus = EventMemberStatus::query()
                 ->where('event_id', $event->id)
                 ->where('member_id', $member->id)
                 ->where('clan_id', $event->clan_id)
                 ->first();
 
-//            $event->status = optional($eventMemberStatus)->status;
             $event->week_day_name = Carbon::parse($event->start_date)->locale('ru_RU')->dayName;
             $event->week_day = Carbon::parse($event->start_date)->isoWeekday();
             $event->time = date('d.m.Y', strtotime($event->start_date));
+            $event->is_hidden = false;
+
+            // Set the is_attended property based on whether the member attended the event
+            $event->is_attended = in_array($event->id, $attendedEvents);
 
             return $event;
         })->sortBy('week_day');
