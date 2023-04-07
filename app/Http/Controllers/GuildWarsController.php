@@ -22,7 +22,7 @@ class GuildWarsController extends Controller
         $guildWars = GuildWars::query()
             ->where('clan_id', $clan->id)
             ->whereBetween('date', [$startOfWeek, $endOfWeek])
-            ->with('status')
+            ->with('guildWarMemberStatuses')
             ->get();
 
         $member = Member::query()
@@ -31,7 +31,11 @@ class GuildWarsController extends Controller
             ->with('characters', 'characters.type')
             ->first();
 
-        $attendedGvgs = $member->attendedGvgs($startOfWeek, $endOfWeek)->pluck('guild_wars_id')->toArray();
+        $attendedGvgs = GuildWarsMemberStatus::with(['guildWar', 'member'])
+            ->where('member_id', $member->id)
+            ->whereBetween('gvg_date', [$startOfWeek, $endOfWeek])
+            ->pluck('guild_wars_id')
+            ->toArray();
 
         $character = $member->characters->where('status', 'main')->first();
 

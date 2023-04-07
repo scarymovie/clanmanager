@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Traits\HasRoles;
+use App\Models\GuildWars;
+use App\Models\GuildWarsMemberStatus;
 
 class Member extends Model
 {
@@ -58,17 +61,22 @@ class Member extends Model
         return $query;
     }
 
-    public function attendedGvgs($start_date = null, $end_date = null)
+    public function guildWarMemberStatuses()
     {
-        $query = $this->belongsToMany(GuildWars::class, 'guild_wars_member_statuses')
-            ->where('guild_wars.title', 'confirmed')
-            ->withTimestamps();
-
-        if ($start_date && $end_date) {
-            $query->whereBetween('guild_wars_member_statuses.gvg_date', [ $start_date, $end_date]);
-        }
-
-        return $query;
+        return $this->hasMany(GuildWarsMemberStatus::class);
     }
+
+    public function guildWars()
+    {
+        return $this->belongsToMany(GuildWars::class, 'guild_wars_member_statuses');
+    }
+
+    public function attendedGuildWars()
+    {
+        return $this->belongsToMany(GuildWars::class, 'guild_wars_member_statuses')
+            ->withPivot('tile')
+            ->withTimestamps();
+    }
+
 
 }

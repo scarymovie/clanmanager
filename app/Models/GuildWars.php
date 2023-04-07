@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\GuildWarsMemberStatus;
 
 class GuildWars extends Model
 {
@@ -17,8 +18,13 @@ class GuildWars extends Model
         'points'
     ];
 
-    public function status()
+    public function guildWarMemberStatuses()
     {
-        return $this->hasOne(GuildWarsMemberStatus::class, );
+        return $this->hasMany(GuildWarsMemberStatus::class);
+    }
+
+    public function members()
+    {
+        return $this->belongsToMany(Member::class, 'guild_wars_member_statuses');
     }
 }
