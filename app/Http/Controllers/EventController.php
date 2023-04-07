@@ -157,6 +157,6 @@ class EventController extends Controller
             ]
         );
 
-        return redirect()->route('events.index', $clan);
+        return redirect()->back();
     }
 }
