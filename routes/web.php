@@ -118,6 +118,12 @@ Route::middleware(['auth'])->group(function (){
                 Route::post('/clan/{clan}/events', [EventController::class, 'store'])
                     ->name('events.store');
 
+                Route::get('/clan/{clan}/gvg/create', [GuildWarsController::class, 'create'])
+                    ->name('gvg.create');
+
+                Route::post('/clan/{clan}/gvg', [GuildWarsController::class, 'store'])
+                    ->name('gvg.store');
+
                 Route::get('clan/{clan}/link/refresh', [ClansController::class, 'setNewInviteLink'])
                     ->name('refresh_invite_link');
 

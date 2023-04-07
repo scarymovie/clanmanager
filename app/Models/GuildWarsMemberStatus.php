@@ -17,6 +17,7 @@ class GuildWarsMemberStatus extends Model
         'title',
         'party_leader_id',
         'note',
-        'image'
+        'image',
+        'gvg_date'
     ];
 }

@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <x-clan-menu :clan="$clan"></x-clan-menu>
+        <x-clan-menu :clan="$clan" :member="$member"></x-clan-menu>
     </x-slot>
 
     <div class="py-12">
@@ -10,11 +10,8 @@
                 <h5 class="eventFullTitle ml-8 mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">{{ $guildWar->title }}</h5>
 
                 <p class="eventFullTime mb-3 font-normal text-gray-700 dark:text-gray-400 text-center">
-                    <br>{{ date('H:i', strtotime($guildWar->date)) }}</p>
-{{--@dd(route('clan.gvg.update', [$clan, $guildWar]))--}}
-                <form action="{{ route('clan.gvg.update', [$clan, $guildWar]) }}" method="post">
-                    @csrf
-                    @method('PUT')
+                    <br>{{ date('d.m.Y H:i', strtotime($guildWar->date)) }}</p>
+                <form action="{{ route('gvg.status', [$clan, $guildWar, 'status' => 'confirmed']) }}">
                     <div>
                         <label for="types" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Персонаж</label>
                         <select id="types" name="character_id"
@@ -27,21 +24,21 @@
                         </select>
                     </div>
 
-                    <div>
+                    {{--<div>
                         <label for="types" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">ПЛ</label>
                         <select id="types" name="party_leader_id"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500
                                         focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400
                                         dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
-                            {{--                        @foreach($characters as $character)--}}
+                            --}}{{--                        @foreach($characters as $character)--}}{{--
                             <option value="id">ПЛЫ</option>
-                            {{--                        @endforeach--}}
+                            --}}{{--                        @endforeach--}}{{--
                         </select>
-                    </div>
-                    <div>
-                        <label for="types" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Скрин</label>
-                        <input type="file" name="image">
-                    </div>
+                    </div>--}}
+                    {{--                    <div>--}}
+                    {{--                        <label for="types" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Скрин</label>--}}
+                    {{--                        <input type="file" name="image">--}}
+                    {{--                    </div>--}}
                     <div>
                         <label for="types" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Комментарий</label>
                         <input class="border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 rounded-md shadow-sm mt-1 block w-full" name="note" type="text" autofocus="autofocus">

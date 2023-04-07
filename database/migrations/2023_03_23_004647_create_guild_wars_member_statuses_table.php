@@ -19,6 +19,7 @@ return new class extends Migration
             $table->foreignId('member_id')->constrained('members')->cascadeOnDelete();
             $table->foreignId('clan_id')->constrained('clans')->cascadeOnDelete();
             $table->foreignId('character_id')->constrained('characters')->cascadeOnDelete();
+            $table->string('gvg_date');
             $table->string('title');
             $table->string('party_leader_id')->nullable();
             $table->string('image')->nullable();

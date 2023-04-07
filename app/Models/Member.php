@@ -58,4 +58,17 @@ class Member extends Model
         return $query;
     }
 
+    public function attendedGvgs($start_date = null, $end_date = null)
+    {
+        $query = $this->belongsToMany(GuildWars::class, 'guild_wars_member_statuses')
+            ->where('guild_wars.title', 'confirmed')
+            ->withTimestamps();
+
+        if ($start_date && $end_date) {
+            $query->whereBetween('guild_wars_member_statuses.gvg_date', [ $start_date, $end_date]);
+        }
+
+        return $query;
+    }
+
 }

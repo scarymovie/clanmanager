@@ -29,8 +29,8 @@ class CharacterStoreRequest extends FormRequest
             'nickname' => ['required', 'max:100'],
             'status' => ['required', new Enum(CharacterEnums::class)],
             'character_type' => ['required', 'exists:App\Models\CharactersType,id'],
-            'link' => 'max:255',
-            'note' => 'max:255'
+            'link' => '',
+            'note' => ''
         ];
 
         return $rules;

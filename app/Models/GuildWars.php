@@ -9,6 +9,14 @@ class GuildWars extends Model
 {
     use HasFactory;
 
+    protected $fillable = [
+        'clan_id',
+        'title',
+        'note',
+        'date',
+        'points'
+    ];
+
     public function status()
     {
         return $this->hasOne(GuildWarsMemberStatus::class, );

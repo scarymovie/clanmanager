@@ -26,7 +26,7 @@ class CreateMemberMasterRequest extends FormRequest
         return [
             'nickname' => 'required',
             'character_type' => 'required|exists:characters_types,id',
-            'link' => 'string',
+            'link' => '',
         ];
     }
 }
