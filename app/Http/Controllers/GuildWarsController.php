@@ -19,17 +19,18 @@ class GuildWarsController extends Controller
         $startOfWeek = Carbon::parse(Carbon::parse($date)->format('d.m.Y') ?? now()->format('d.m.Y'))->startOfWeek()->format('d.m.Y');
         $endOfWeek = Carbon::parse(Carbon::parse($date)->format('d.m.Y') ?? now()->format('d.m.Y'))->endOfWeek()->format('d.m.Y');
 
-        $guildWars = GuildWars::query()
-            ->where('clan_id', $clan->id)
-            ->whereBetween('date', [$startOfWeek, $endOfWeek])
-            ->with('guildWarMemberStatuses')
-            ->get();
-
         $member = Member::query()
             ->where('clan_id', $clan->id)
             ->where('user_id', Auth::id())
             ->with('characters', 'characters.type')
             ->first();
+
+        $guildWars = GuildWars::query()
+            ->where('clan_id', $clan->id)
+            ->where('date', '>', Carbon::parse($member->created_at)->format('d.m.Y'))
+            ->whereBetween('date', [$startOfWeek, $endOfWeek])
+            ->with('guildWarMemberStatuses')
+            ->get();
 
         $attendedGvgs = GuildWarsMemberStatus::query()
             ->where('member_id', $member->id)
