@@ -71,12 +71,4 @@ class Member extends Model
         return $this->belongsToMany(GuildWars::class, 'guild_wars_member_statuses');
     }
 
-    public function attendedGuildWars()
-    {
-        return $this->belongsToMany(GuildWars::class, 'guild_wars_member_statuses')
-            ->withPivot('tile')
-            ->withTimestamps();
-    }
-
-
 }
