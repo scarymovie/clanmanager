@@ -16,7 +16,8 @@ class EventController extends Controller
 {
     public function index(Request $request, Clan $clan)
     {
-        $week = Carbon::createFromFormat('d.m.Y', $request->date);
+        $request_date = Carbon::parse($request->date)->format('d.m.Y') ?? now();
+        $week = Carbon::createFromFormat('d.m.Y', $request_date);
         $start_of_week = Carbon::parse($week)->startOf('week');
         $end_of_week = Carbon::parse($week)->endOfWeek();
 

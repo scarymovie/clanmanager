@@ -77,6 +77,7 @@ class ActivityController extends Controller
             $memberActivity[$member->id] = [
                 'member' => $member,
                 'activity_ratio' => round($activityRatio),
+                'event_count' => $memberEventCount
             ];
         }
         return view('activity.index', compact('members', 'eventStatistics', 'gvgList', 'clan', 'auth_member', 'memberActivity', 'memberEventCount', 'start', 'end'));

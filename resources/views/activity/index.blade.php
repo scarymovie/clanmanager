@@ -53,9 +53,9 @@
                                         {{ $gvg->title }}
                                     </th>
                                 @endforeach
-                                <th scope="col" class="px-6 py-3">
-                                    Сумма баллов
-                                </th>
+{{--                                <th scope="col" class="px-6 py-3">--}}
+{{--                                    Сумма баллов--}}
+{{--                                </th>--}}
                             </tr>
                             </thead>
                             <tbody>
@@ -67,7 +67,7 @@
                                             <strong>{{ $member->characters->first()->nickname }}</strong>
                                         </th>
                                         <td class="px-6 py-4">
-                                            {{ $memberEventCount }}
+                                            {{ $memberActivity[$member->id]['event_count'] }}
                                         </td>
                                         <td class="px-6 py-4">
                                             {{ $memberActivity[$member->id]['activity_ratio'] }}%

@@ -16,6 +16,14 @@
                    dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">Создать ивент</a>
             </li>
         </ul>
+    @else
+        <ul class="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400 border-2">
+            <li class="w-full">
+                <a href="{{ route('events.index', $clan) }}"
+                   class="@if(request()->routeIs('events.index')) text-gray-900 bg-gray-100 @else bg-white @endif inline-block w-full p-4 rounded-l-lg focus:ring-4 focus:ring-blue-300 focus:outline-none
+                   dark:bg-gray-700 dark:text-white" aria-current="page">Все ивенты</a>
+            </li>
+        </ul>
     @endif
 
     <div class="py-12">

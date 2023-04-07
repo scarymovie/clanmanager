@@ -117,6 +117,7 @@ class MembersController extends Controller
         $decision = $request->decision;
         if ($decision === 'accept'){
             $member->syncRoles([]);
+            $member->update(['rank' => 'Мембер']);
             $member->assignRole('Member');
         } elseif ($decision === 'decline'){
             $member->syncRoles([]);
