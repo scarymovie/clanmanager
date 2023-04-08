@@ -67,7 +67,7 @@
                                             <strong>{{ $member->characters->first()->nickname }}</strong>
                                         </th>
                                         <td class="px-6 py-4">
-                                            {{ $memberActivity[$member->id]['event_count'] }}
+                                            {{ $memberActivity[$member->id]['event_count'] + $memberActivity[$member->id]['gvg_count'] }}
                                         </td>
                                         <td class="px-6 py-4">
                                             {{ $memberActivity[$member->id]['activity_ratio'] }}%
@@ -77,16 +77,10 @@
                                                 {{ $eventAttendances[$member->characters->first()->id]['count'] ?? 0 }}
                                             </td>
                                         @endforeach
-                                        @foreach($gvgList as $gvg)
-                                            @if($gvg->status != null && $gvg->status->title === 'confirmed')
-                                                <td class="px-6 py-4 text-green-600">
-                                                    {{ $gvg->points }}
-                                                </td>
-                                            @else
-                                                <td class="px-6 py-4 text-red-600">
-                                                    0
-                                                </td>
-                                            @endif
+                                        @foreach($gvgStatistics as $gvgAttendances)
+                                            <td class="px-6 py-4 text-green-600">
+                                                {{ $gvgAttendances[$member->characters->first()->id]['count'] ?? 0 }}
+                                            </td>
                                         @endforeach
                                         <td class="px-6 py-4 text-black-600">
 {{--                                            <strong><b>{{ $pointsOfConfirmedEvents }}</b></strong>--}}
