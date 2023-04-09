@@ -40,6 +40,9 @@
                                     Ник
                                 </th>
                                 <th scope="col" class="px-6 py-3">
+                                    Дата тага
+                                </th>
+                                <th scope="col" class="px-6 py-3">
                                     Количество ивентов
                                 </th>
                                 <th scope="col" class="px-6 py-3">
@@ -66,6 +69,9 @@
                                         <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                             <strong>{{ $member->characters->first()->nickname }}</strong>
                                         </th>
+                                        <td class="px-6 py-4">
+                                            {{ $member->created_at->format('d.m.Y') }}
+                                        </td>
                                         <td class="px-6 py-4">
                                             {{ $memberActivity[$member->id]['event_count'] + $memberActivity[$member->id]['gvg_count'] }}
                                         </td>
