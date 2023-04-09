@@ -153,4 +153,33 @@ class GuildWarsController extends Controller
         );
         return redirect()->route('gvg.index', $clan);
     }
+
+    public function gvgMasterStatus(Request $request, Clan $clan, GuildWars $guildWar, Member $member)
+    {
+        $guildWar_day = Carbon::parse($guildWar->date);
+
+        $validated['guild_war_id'] = $guildWar->id;
+        $validated['note'] = $request->note ?? '';
+        $validated['clan_id'] = $clan->id;
+        $validated['status'] = $request->status;
+
+        $validated['character_id'] = $member->characters->where('status', 'main')->first()->id;
+        $validated['member_id'] = $member->id;
+
+        $guildWarMember = GuildWarsMemberStatus::updateOrCreate(
+            [
+                'clan_id' => $validated['clan_id'],
+                'guild_wars_id' => $validated['guild_war_id'],
+                'member_id' => $validated['member_id'],
+                'character_id' => $validated['character_id'],
+                'gvg_date' => $guildWar->date,
+                'party_leader_id' => '1',
+                'note' => $validated['note']
+            ],
+            [
+                'title' => $validated['status'],
+            ]
+        );
+        return redirect()->back();
+    }
 }

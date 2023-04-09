@@ -37,6 +37,12 @@
                             class="border-b-2 border-indigo-500"
                             @endif>Активность</a>
                 </li>
+                <li>
+                    <a href="{{ route('signatures.index', $clan) }}"
+                       @if(request()->routeIs(['signatures.*']))
+                           class="border-b-2 border-indigo-500"
+                        @endif>Отписи</a>
+                </li>
             </ul>
         </div>
     </div>
