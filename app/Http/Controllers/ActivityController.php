@@ -105,12 +105,11 @@ class ActivityController extends Controller
             $gvgCounts = [];
             $memberGvgCount = 0;
             foreach ($gvgList as $gvg) {
-                $dayOfWeek = Carbon::parse($gvg->date)->dayOfWeek;
-                $gvgCount = $member->created_at->diffInDaysFiltered(function (Carbon $date) use ($dayOfWeek) {
-                    return $date->dayOfWeek === $dayOfWeek;
-                }, $endDate);
-                $memberGvgCount += $gvgCount;
-                $gvgCounts[$gvg->title] = $gvgCount;
+                if (Carbon::parse($gvg->date)->greaterThanOrEqualTo($member->created_at)) {
+                    $gvgCount = 1;
+                    $memberGvgCount += $gvgCount;
+                    $gvgCounts[$gvg->title] = $gvgCount;
+                }
             }
 
             $activityRatio = ($eventMemberStatusCount + $gvgMemberStatusCount) > 0 ? ($eventMemberStatusCount + $gvgMemberStatusCount) / ($memberEventCount + $gvgMemberStatusCount) * 100 : 0;
