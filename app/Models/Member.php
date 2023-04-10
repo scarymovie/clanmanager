@@ -2,12 +2,13 @@
 
 namespace App\Models;
 
+use App\Models\GuildWarsMemberStatus;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\Permission\Traits\HasRoles;
 use App\Models\GuildWars;
-use App\Models\GuildWarsMemberStatus;
+use App\Models\EventMemberStatus;
 
 class Member extends Model
 {
@@ -59,6 +60,11 @@ class Member extends Model
         }
 
         return $query;
+    }
+
+    public function eventMemberStatuses()
+    {
+        return $this->hasMany(EventMemberStatus::class);
     }
 
     public function guildWarMemberStatuses()

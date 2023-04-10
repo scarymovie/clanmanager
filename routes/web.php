@@ -8,6 +8,7 @@ use App\Http\Controllers\GuildWarsController;
 use App\Http\Controllers\MembersController;
 use App\Http\Controllers\ProfilesController;
 use App\Http\Controllers\SignaturesController;
+use App\Http\Controllers\SignaturesEventsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -131,14 +132,23 @@ Route::middleware(['auth'])->group(function (){
                 Route::get('/clan/{clan}/{member}', [MembersController::class, 'changeCandidateStatus'])
                     ->name('candidate.status');
 
-                Route::get('/clan/{clan}/signatures/list', [SignaturesController::class, 'index'])
+                Route::get('/clan/{clan}/signatures/gvg', [SignaturesController::class, 'index'])
                     ->name('signatures.index');
 
-                Route::get('/clan/{clan}/signatures/{guildWar}', [SignaturesController::class, 'show'])
+                Route::get('/clan/{clan}/signatures/gvg/{guildWar}', [SignaturesController::class, 'show'])
                     ->name('signatures.show');
 
-                Route::get('/clan/{clan}/signatures/{guildWar}/{member}', [GuildWarsController::class, 'gvgMasterStatus'])
+                Route::get('/clan/{clan}/signatures/gvg/{guildWar}/{member}', [GuildWarsController::class, 'gvgMasterStatus'])
                     ->name('gvg.masterUpdate');
+
+                Route::get('/clan/{clan}/signatures/events', [SignaturesEventsController::class, 'index'])
+                    ->name('signaturesEvents.index');
+
+                Route::get('/clan/{clan}/signatures/events/{event}', [SignaturesEventsController::class, 'show'])
+                    ->name('signaturesEvents.show');
+
+                Route::get('/clan/{clan}/signatures/events/update/{event}/{member}', [EventController::class, 'eventMasterStatus'])
+                    ->name('events.masterUpdate');
             });
         });
 

@@ -6,15 +6,15 @@
     @if($auth_member->hasRole('Master'))
         <ul class="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400 border-2">
             <li class="w-full">
-                <a href="{{ route('gvg.index', $clan) }}"
-                   class="@if(request()->routeIs('gvg.index')) text-gray-900 bg-gray-100 @else bg-white @endif inline-block w-full p-4 rounded-l-lg focus:ring-4 focus:ring-blue-300 focus:outline-none
+                <a href="{{ route('signatures.index', $clan) }}"
+                   class="@if(request()->routeIs('signatures.index')) text-gray-900 bg-gray-100 @else bg-white @endif inline-block w-full p-4 rounded-l-lg focus:ring-4 focus:ring-blue-300 focus:outline-none
                    dark:bg-gray-700 dark:text-white" aria-current="page">GvG</a>
             </li>
-{{--            <li class="w-full">--}}
-{{--                <a href="{{ route('gvg.create', [$clan]) }}"--}}
-{{--                   class="@if(request()->routeIs('gvg.create'))text-gray-900 bg-gray-100 @else bg-white @endif inline-block w-full p-4 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none--}}
-{{--                   dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">Создать GvG</a>--}}
-{{--            </li>--}}
+            <li class="w-full">
+                <a href="{{ route('signaturesEvents.index', [$clan]) }}"
+                   class="@if(request()->routeIs('signaturesEvents.index'))text-gray-900 bg-gray-100 @else bg-white @endif inline-block w-full p-4 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none
+                   dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">Ивенты</a>
+            </li>
         </ul>
     @endif
 

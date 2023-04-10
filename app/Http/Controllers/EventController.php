@@ -25,7 +25,8 @@ class EventController extends Controller
         $memberCreatedAt = $member->created_at;
 
         $weekday = Carbon::parse($week ?? now())->isoWeekday();
-        $diffWeeks = Carbon::now()->startOfWeek()->diffInWeeks($week, false);
+        $diffDays = Carbon::now()->startOfWeek()->diffInDays(Carbon::parse($week), false);
+        $diffWeeks = (int) round($diffDays / 7);
 
         $events = Event::where('clan_id', $clan->id)
             ->with(['status' => function ($query) use ($start_of_week, $end_of_week) {
@@ -158,5 +159,38 @@ class EventController extends Controller
         );
 
         return redirect()->route('events.index', $clan);
+    }
+
+    public function eventMasterStatus(Request $request, Clan $clan, Event $event, Member $member)
+    {
+//        dd($request->all());
+        $eventDate = Carbon::parse($event->start_date);
+
+        $diffDays = Carbon::now()->diffInDays(Carbon::parse($eventDate), false);
+        $diffWeeks = (int) floor($diffDays / 7);
+
+        $validated['event_id'] = $event->id;
+        $validated['note'] = $request->note ?? '';
+        $validated['clan_id'] = $clan->id;
+        $validated['status'] = $request->status;
+
+        $validated['character_id'] = $member->characters->where('status', 'main')->first()->id;
+        $validated['member_id'] = $member->id;
+
+        $guildWarMember = EventMemberStatus::updateOrCreate(
+            [
+                'clan_id' => $validated['clan_id'],
+                'event_id' => $validated['event_id'],
+                'member_id' => $validated['member_id'],
+                'character_id' => $validated['character_id'],
+                'event_date' => $eventDate->addWeeks($diffWeeks)->format('Y-m-d'),
+                'party_leader_id' => '1',
+            ],
+            [
+                'status' => $validated['status'],
+//                'note' => $validated['note']
+            ]
+        );
+        return redirect()->back();
     }
 }

@@ -85,14 +85,14 @@
                                     </div>
                                 </div>
                                 @if (in_array($event->id, $attendedEvents))
-                                    <p>Вы уже отчитались о посещении этого мероприятия</p>
-                                @else
-                                <div
-                                    class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-                                    <a href="{{ route('events.show', [$clan, $event, $diffWeeks]) }}">
-                                        Отчитаться
-                                    </a>
-                                </div>
+                                    <p>Вы были на данном ивенте</p>
+                                    {{--                                @else--}}
+                                    {{--                                    <div--}}
+                                    {{--                                        class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">--}}
+                                    {{--                                        <a href="{{ route('events.show', [$clan, $event, $diffWeeks]) }}">--}}
+                                    {{--                                            Отчитаться--}}
+                                    {{--                                        </a>--}}
+                                    {{--                                    </div>--}}
                                 @endif
                             </div>
                         @elseif(isset($diffWeeks) && $diffWeeks > 0)
@@ -309,14 +309,14 @@
                                     </div>
                                 </div>
                                 @if (in_array($event->id, $attendedEvents))
-                                    <p>Вы уже отчитались о посещении этого мероприятия</p>
-                                @else
-                                    <div
-                                        class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-                                        <a href="{{ route('events.show', [$clan, $event, $diffWeeks]) }}">
-                                            Отчитаться
-                                        </a>
-                                    </div>
+                                    <p>Вы были на данном ивенте</p>
+{{--                                @else--}}
+{{--                                    <div--}}
+{{--                                        class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">--}}
+{{--                                        <a href="{{ route('events.show', [$clan, $event, $diffWeeks]) }}">--}}
+{{--                                            Отчитаться--}}
+{{--                                        </a>--}}
+{{--                                    </div>--}}
                                 @endif
                             </div>
                         @elseif($event['week_day'] === $weekday && \Carbon\Carbon::parse( date('H:i', strtotime($event->start_date)))->format('H:i') < now())
@@ -331,14 +331,14 @@
                                     </div>
                                 </div>
                                 @if (in_array($event->id, $attendedEvents))
-                                    <p>Вы уже отчитались о посещении этого мероприятия</p>
-                                @else
-                                <div
-                                    class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-                                    <a href="{{ route('events.show', [$clan, $event, $diffWeeks]) }}">
-                                        Отчитаться
-                                    </a>
-                                </div>
+                                    <p>Вы были на данном ивенте</p>
+                                    {{--                                @else--}}
+                                    {{--                                    <div--}}
+                                    {{--                                        class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">--}}
+                                    {{--                                        <a href="{{ route('events.show', [$clan, $event, $diffWeeks]) }}">--}}
+                                    {{--                                            Отчитаться--}}
+                                    {{--                                        </a>--}}
+                                    {{--                                    </div>--}}
                                 @endif
                             </div>
                         @else
