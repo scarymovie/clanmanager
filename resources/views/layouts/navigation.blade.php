@@ -21,7 +21,7 @@
                 @endphp
                 @foreach($clans as $clan)
                 <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                    <x-nav-link :href="route('clans.show', $clan)" :active="request()->routeIs('clans.*', 'members.*', 'events.*', 'gvg.*', 'characters.*', 'activity.*', 'signatures.*') && !request()->routeIs(['clans.index', 'clans.create']) && request()->clan->id === $clan->id">
+                    <x-nav-link :href="route('clans.show', $clan)" :active="request()->routeIs('clans.*', 'members.*', 'events.*', 'gvg.*', 'characters.*', 'activity.*', 'signatures.*', 'signaturesEvents.*') && !request()->routeIs(['clans.index', 'clans.create']) && request()->clan->id === $clan->id">
                         {{ $clan->title }}
                     </x-nav-link>
                 </div>

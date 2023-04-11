@@ -25,21 +25,21 @@
                     </a>
                 </li>
                 <li>
-                        <a href="{{ route('characters.index', $clan) }}"
-                            @if(request()->routeIs(['characters.*']))
-                            class="border-b-2 border-indigo-500"
-                            @endif>Мои персонажи
-                        </a>
+                    <a href="{{ route('characters.index', $clan) }}"
+                       @if(request()->routeIs(['characters.*']))
+                           class="border-b-2 border-indigo-500"
+                        @endif>Мои персонажи
+                    </a>
                 </li>
                 <li>
-                        <a href="{{ route('activity.index', $clan) }}"
-                           @if(request()->routeIs(['activity.*']))
-                            class="border-b-2 border-indigo-500"
-                            @endif>Активность</a>
+                    <a href="{{ route('activity.index', $clan) }}"
+                       @if(request()->routeIs(['activity.*']))
+                           class="border-b-2 border-indigo-500"
+                        @endif>Активность</a>
                 </li>
                 <li>
                     <a href="{{ route('signatures.index', $clan) }}"
-                       @if(request()->routeIs(['signatures.*']))
+                       @if(request()->routeIs(['signatures.*', 'signaturesEvents.*']))
                            class="border-b-2 border-indigo-500"
                         @endif>Отписи</a>
                 </li>

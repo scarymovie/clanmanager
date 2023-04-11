@@ -30,7 +30,7 @@
             <div class="p-4 sm:p-8 bg-white shadow sm:rounded-lg">
 
                 <h5 class="eventFullTitle ml-8 mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center">Создать новый ивент</h5>
-                <h4 class="text-center text-red-600">Пожалуйста, создавайте ивенты на текущей неделе или прошлых, если создать на будущие, то багается. пофиксю потом</h4>
+{{--                <h4 class="text-center text-red-600">Пожалуйста, создавайте ивенты на текущей неделе или прошлых, если создать на будущие, то багается. пофиксю потом</h4>--}}
                 <form action="{{ route('events.store', $clan) }}" method="post">
                     @csrf
                     <div>

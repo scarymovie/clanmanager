@@ -35,7 +35,6 @@ class EventController extends Controller
             ->get();
 
         $attendedEvents = $member->attendedEvents($start_of_week, $end_of_week)->pluck('event_id')->toArray();
-
         $events = $events->map(function ($event) use ($memberCreatedAt, $start_of_week, $member, $attendedEvents, $diffWeeks) {
             $eventDate = Carbon::parse($event->start_date)->addWeek($diffWeeks);
 

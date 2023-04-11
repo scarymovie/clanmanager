@@ -70,7 +70,7 @@
                                     </td>
                                     <td>
                                         @if(isset($member->guildWarMemberStatuses->first()->title) && $member->guildWarMemberStatuses->first()->title === 'confirmed')
-                                        <a href="{{ route('gvg.masterUpdate', [$clan, $guildWar, $member, 'status' => 'decline']) }}"
+                                        <a href="{{ route('gvg.masterUpdate', [$clan, $guildWar, $member, 'status' => 'rejected']) }}"
                                                 class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none
                                                 focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg
                                                 text-sm px-5 py-2.5 text-center mr-2 mb-2">Отклонить</a>
@@ -79,7 +79,7 @@
                                                     class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none
                                                 focus:ring-green-300 dark:focus:ring-green-800 shadow-lg shadow-green-500/50 dark:shadow-lg dark:shadow-green-800/80 font-medium rounded-lg
                                                 text-sm px-5 py-2.5 text-center mr-2 mb-2">Подтвердить</a>
-                                            <a href="{{ route('gvg.masterUpdate', [$clan, $guildWar, $member, 'status' => 'decline']) }}"
+                                            <a href="{{ route('gvg.masterUpdate', [$clan, $guildWar, $member, 'status' => 'rejected']) }}"
                                                     class="text-white bg-gradient-to-r from-red-400 via-red-500 to-red-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none
                                                 focus:ring-red-300 dark:focus:ring-red-800 shadow-lg shadow-red-500/50 dark:shadow-lg dark:shadow-red-800/80 font-medium rounded-lg
                                                 text-sm px-5 py-2.5 text-center mr-2 mb-2">Отклонить</a>
