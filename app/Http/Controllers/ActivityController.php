@@ -33,6 +33,7 @@ class ActivityController extends Controller
         foreach ($events as $event) {
             $attendees = EventMemberStatus::where('event_id', $event->id)
                 ->whereBetween('event_date', [$startDate, $endDate])
+                ->where('status', 'confirmed')
                 ->get();
 
             $eventAttendances = [];
@@ -45,11 +46,12 @@ class ActivityController extends Controller
             }
             $eventStatistics[$event->title] = $eventAttendances;
         }
-
+//        dd($eventStatistics);
         $gvgStatistics = [];
         foreach ($gvgList as $gvg) {
             $attendees = GuildWarsMemberStatus::where('guild_wars_id', $gvg->id)
                 ->whereBetween('gvg_date', [$startDate->format('d.m.Y'), $endDate->format('d.m.Y')])
+                ->where('title', 'confirmed')
                 ->get();
             $gvgAttendances = [];
             foreach ($attendees as $attendee) {
@@ -69,10 +71,12 @@ class ActivityController extends Controller
 
             $eventMemberStatusCount = EventMemberStatus::where('member_id', $member->id)
                 ->whereBetween('event_date', [$member->created_at->format('d.m.Y'), $endDate])
+                ->where('status', 'confirmed')
                 ->count();
 
             $gvgMemberStatusCount = GuildWarsMemberStatus::where('member_id', $member->id)
                 ->whereBetween('gvg_date', [$member->created_at->format('d.m.Y'), $endDate->format('d.m.Y')])
+                ->where('title', 'confirmed')
                 ->count();
 
             foreach ($eventStatistics as $event) {
@@ -111,8 +115,8 @@ class ActivityController extends Controller
                     $gvgCounts[$gvg->title] = $gvgCount;
                 }
             }
-
-            $activityRatio = ($eventMemberStatusCount + $gvgMemberStatusCount) > 0 ? ($eventMemberStatusCount + $gvgMemberStatusCount) / ($memberEventCount + $gvgMemberStatusCount) * 100 : 0;
+//dd($memberEventCount);
+            $activityRatio = ($eventMemberStatusCount + $gvgMemberStatusCount) > 0 ? ($eventMemberStatusCount + $gvgMemberStatusCount) / ($memberEventCount + $memberGvgCount) * 100 : 0;
 
             $memberActivity[$member->id] = [
                 'member' => $member,

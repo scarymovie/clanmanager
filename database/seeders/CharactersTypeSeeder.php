@@ -18,15 +18,15 @@ class CharactersTypeSeeder extends Seeder
         $characters_type = [
             ['title' => 'Воин'],
             ['title' => 'Маг'],
-            ['title' => 'Ганер'],
+//            ['title' => 'Ганер'],
 
             ['title' => 'Оборотень'],
             ['title' => 'Друид'],
-            ['title' => 'Обезьяна'],
+//            ['title' => 'Обезьяна'],
 
             ['title' => 'Прист'],
             ['title' => 'Лучник'],
-            ['title' => 'Паладин'],
+//            ['title' => 'Паладин'],
 
             ['title' => 'Шаман'],
             ['title' => 'Син'],

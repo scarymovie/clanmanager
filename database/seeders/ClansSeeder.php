@@ -18,7 +18,7 @@ class ClansSeeder extends Seeder
     {
         Clan::create([
             'user_id' => 1,
-            'title' => 'СЛ4В3Н3',
+            'title' => 'isouw',
             'invite_link' => Str::random(32)
         ]);
     }

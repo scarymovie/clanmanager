@@ -99,13 +99,13 @@
                             </div>
                             @if (in_array($guildWar->id, $attendedGvgs))
                                 <p>Вы уже отчитались о посещении этого мероприятия</p>
-                            @else
-                                <div
-                                    class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
-                                    <a href="{{ route('gvg.show', [$clan, $guildWar]) }}">
-                                        Отчитаться
-                                    </a>
-                                </div>
+{{--                            @else--}}
+{{--                                <div--}}
+{{--                                    class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">--}}
+{{--                                    <a href="{{ route('gvg.show', [$clan, $guildWar]) }}">--}}
+{{--                                        Отчитаться--}}
+{{--                                    </a>--}}
+{{--                                </div>--}}
                             @endif
                         </div>
                     @elseif(\Carbon\Carbon::parse($guildWar->date)->format('d.m.Y H:i') > now()->format('d.m.Y H:i'))
@@ -200,7 +200,7 @@
                                     <div
                                         class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
                                         <a href="{{ route('gvg.status', [$clan, $guildWar,'status' => 'accept']) }}">
-                                            Приду123
+                                            Приду
                                         </a>
                                     </div>
                                     <div
@@ -238,7 +238,7 @@
                                 <div
                                     class="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:outline-none focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
                                     <a href="{{ route('gvg.status', [$clan, $guildWar,'status' => 'accept']) }}">
-                                        Приду123
+                                        Приду
                                     </a>
                                 </div>
                                 <div

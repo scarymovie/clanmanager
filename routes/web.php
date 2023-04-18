@@ -23,7 +23,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+//    return view('welcome');
+    return redirect()->route('clans.index');
 });
 
 Route::middleware(['auth'])->group(function (){
@@ -86,8 +87,8 @@ Route::middleware(['auth'])->group(function (){
             Route::get('clan/{clan}/gvg/{guildWar}/show', [GuildWarsController::class, 'show'])
                 ->name('gvg.show');
 
-            Route::get('clan/{clan}/characters', [CharactersController::class, 'index'])
-                ->name('characters.index');
+                Route::get('clan/{clan}/characters', [CharactersController::class, 'index'])
+                    ->name('characters.index');
 
             Route::get('clan/{clan}/characters/create', [CharactersController::class, 'create'])
                 ->name('characters.create');
@@ -106,7 +107,7 @@ Route::middleware(['auth'])->group(function (){
 
 
             // Доступно только для мастера клана или других ролей, которые будут добавлены позже
-            Route::middleware('checkRole:Master')->group(function (){
+            Route::middleware('clanRole:Master')->group(function (){
 
                 Route::get('/clan/{clan}/members/{member}/create', [MembersController::class, 'create'])
                     ->name('members.create');

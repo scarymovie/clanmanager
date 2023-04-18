@@ -25,33 +25,37 @@ class EventController extends Controller
         $memberCreatedAt = $member->created_at;
 
         $weekday = Carbon::parse($week ?? now())->isoWeekday();
-        $diffDays = Carbon::now()->startOfWeek()->diffInDays(Carbon::parse($week), false);
+        $diffDays = Carbon::now()->startOfWeek()->diffInDays(Carbon::parse($week->startOfWeek()), false);
         $diffWeeks = (int) round($diffDays / 7);
 
         $events = Event::where('clan_id', $clan->id)
-            ->with(['status' => function ($query) use ($start_of_week, $end_of_week) {
+            ->with(['status' => function ($query) use ($start_of_week, $end_of_week, $member) {
                 $query->whereBetween('event_date', [$start_of_week, $end_of_week]);
+                $query->where('member_id', $member->id);
             }])
             ->get();
 
         $attendedEvents = $member->attendedEvents($start_of_week, $end_of_week)->pluck('event_id')->toArray();
-        $events = $events->map(function ($event) use ($memberCreatedAt, $start_of_week, $member, $attendedEvents, $diffWeeks) {
-            $eventDate = Carbon::parse($event->start_date)->addWeek($diffWeeks);
-
+        $events = $events->map(function ($event) use ($memberCreatedAt, $start_of_week, $week, $member, $attendedEvents, $diffWeeks) {
+            $diffDaysEventDate = Carbon::now()->diffInDays(Carbon::parse($event->start_date), false);
+            $diffWeeksEventDate = (int) round(abs($diffDaysEventDate) / 7);
+            $eventDate = Carbon::parse($event->start_date)->addWeek($diffWeeksEventDate);
             // Check if the event happened before the member joined the clan
             if ($eventDate->lt($memberCreatedAt)) {
+//                dd($eventDate);
                 $event->is_hidden = true;
                 return $event;
             }
 
             // Calculate the number of weeks between the event date and the start of the week
-            $diffWeeks = $eventDate->diffInWeeks($start_of_week, false);
+            $diffWeeks = $eventDate->diffInWeeks($week, false);
 
             // Check if the event happened before the start of the week
-            if ($diffWeeks < 0) {
-                $event->is_hidden = true;
-                return $event;
-            }
+//            if ($diffWeeks < 0) {
+////                dd($diffWeeks);
+//                $event->is_hidden = true;
+//                return $event;
+//            }
 
             $eventMemberStatus = EventMemberStatus::query()
                 ->where('event_id', $event->id)
@@ -69,9 +73,8 @@ class EventController extends Controller
 
             return $event;
         })->sortBy('week_day');
-//        dd($events);
-        $character = $member->characters->where('status', 'main')->first();
 
+        $character = $member->characters->where('status', 'main')->first();
         return view('events.index', compact(['events', 'clan', 'character', 'weekday', 'diffWeeks', 'member', 'week', 'attendedEvents']));
     }
 
@@ -165,8 +168,8 @@ class EventController extends Controller
 //        dd($request->all());
         $eventDate = Carbon::parse($event->start_date);
 
-        $diffDays = Carbon::now()->diffInDays(Carbon::parse($eventDate), false);
-        $diffWeeks = (int) floor($diffDays / 7);
+        $diffDays = Carbon::parse($eventDate)->diffInDays(Carbon::parse($request->week), false);
+        $diffWeeks = (int) round($diffDays / 7);
 
         $validated['event_id'] = $event->id;
         $validated['note'] = $request->note ?? '';

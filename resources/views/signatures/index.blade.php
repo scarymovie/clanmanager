@@ -6,14 +6,14 @@
     @if($auth_member->hasRole('Master'))
         <ul class="hidden text-sm font-medium text-center text-gray-500 divide-x divide-gray-200 rounded-lg shadow sm:flex dark:divide-gray-700 dark:text-gray-400 border-2">
             <li class="w-full">
-                <a href="{{ route('signatures.index', $clan) }}"
-                   class="@if(request()->routeIs('signatures.index')) text-gray-900 bg-gray-100 @else bg-white @endif inline-block w-full p-4 rounded-l-lg focus:ring-4 focus:ring-blue-300 focus:outline-none
-                   dark:bg-gray-700 dark:text-white" aria-current="page">GvG</a>
+                <a href="{{ route('signaturesEvents.index', [$clan]) }}"
+                   class="@if(request()->routeIs('signaturesEvents.*'))text-gray-900 bg-gray-100 @else bg-white @endif inline-block w-full p-4 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none
+                   dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">Ивенты</a>
             </li>
             <li class="w-full">
-                <a href="{{ route('signaturesEvents.index', [$clan]) }}"
-                   class="@if(request()->routeIs('signaturesEvents.index'))text-gray-900 bg-gray-100 @else bg-white @endif inline-block w-full p-4 hover:text-gray-700 hover:bg-gray-50 focus:ring-4 focus:ring-blue-300 focus:outline-none
-                   dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700">Ивенты</a>
+                <a href="{{ route('signatures.index', $clan) }}"
+                   class="@if(request()->routeIs('signatures.*')) text-gray-900 bg-gray-100 @else bg-white @endif inline-block w-full p-4 rounded-l-lg focus:ring-4 focus:ring-blue-300 focus:outline-none
+                   dark:bg-gray-700 dark:text-white" aria-current="page">GvG</a>
             </li>
         </ul>
     @endif
@@ -55,10 +55,12 @@
                                 <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ $gvg->title }}</h5>
                             </a>
                             <p class="mb-3 font-normal text-gray-700 dark:text-gray-400">Отписей - {{ $gvg->guildWarMemberStatuses->count() }}</p>
-                            <a href="{{ route('signatures.show', [$clan, $gvg]) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                                Перейти
-                                <svg aria-hidden="true" class="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-                            </a>
+                            @if($auth_member->hasRole('Master'))
+                                <a href="{{ route('signatures.show', [$clan, $gvg]) }}" class="inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                                    Перейти
+                                    <svg aria-hidden="true" class="w-4 h-4 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                                </a>
+                            @endif
                         </div>
                     </div>
                 @endforeach

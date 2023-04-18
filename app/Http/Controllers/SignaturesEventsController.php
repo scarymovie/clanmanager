@@ -65,7 +65,7 @@ class SignaturesEventsController extends Controller
         },'characters.type'])->get();
 
         $members = $members->sortBy(function ($member) {
-            return $member->eventMemberStatuses->first()->status;
+            return $member->eventMemberStatuses->first()->status ?? 'Нет информации';
         });
 
         return view('signatures.show_event', compact('clan', 'event', 'auth_member', 'members'));

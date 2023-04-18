@@ -29,7 +29,9 @@ class GuildWarsController extends Controller
             ->where('clan_id', $clan->id)
             ->where('date', '>', Carbon::parse($member->created_at)->format('d.m.Y'))
             ->whereBetween('date', [$startOfWeek, $endOfWeek])
-            ->with('guildWarMemberStatuses')
+            ->with(['guildWarMemberStatuses' => function ($query) use ($member) {
+                $query->where('member_id', $member->id);
+            }])
             ->get();
 
         $attendedGvgs = GuildWarsMemberStatus::query()
@@ -159,7 +161,7 @@ class GuildWarsController extends Controller
         $guildWar_day = Carbon::parse($guildWar->date);
 
         $validated['guild_war_id'] = $guildWar->id;
-        $validated['note'] = $request->note ?? '';
+        $validated['note'] = $request->note;
         $validated['clan_id'] = $clan->id;
         $validated['status'] = $request->status;
 

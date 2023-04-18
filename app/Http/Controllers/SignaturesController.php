@@ -52,7 +52,7 @@ class SignaturesController extends Controller
         $members = Member::where('clan_id', $clan->id)->with(['guildWarMemberStatuses','characters.type'])->get();
 
         $members = $members->sortBy(function ($member) {
-            return $member->guildWarMemberStatuses->first()->title;
+            return $member->guildWarMemberStatuses->first()->title ?? 'Нет информации';
         });
 
         return view('signatures.show', compact('clan', 'guildWar', 'auth_member', 'members'));
